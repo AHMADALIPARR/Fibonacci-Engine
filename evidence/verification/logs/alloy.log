@@ -1,5 +1,5 @@
 $ ruby scripts/alloy-check.rb
-# started 2026-11-10T18:51:18+0000
+# started 2026-11-10T19:15:33+0000
 braid_extended.als: alloy exit 0
   OK   LeftInverse                          NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check LeftInverse for exactly 8 Pos
   OK   RightInverse                         NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check RightInverse for exactly 8 Pos

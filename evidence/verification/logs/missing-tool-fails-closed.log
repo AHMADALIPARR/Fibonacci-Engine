@@ -1,5 +1,5 @@
 $ env PATH=/nonexistent /usr/bin/sh scripts/require-tool.sh bqn
-# started 2026-11-10T18:51:24+0000
+# started 2026-11-10T19:15:39+0000
 missing bqn
 # exit 127
 # required failure text: missing bqn

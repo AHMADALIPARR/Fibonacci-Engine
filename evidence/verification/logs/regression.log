@@ -1,12 +1,12 @@
 $ ruby tests/regression/test_regression.rb
-# started 2026-11-10T18:51:10+0000
-Run options: --seed 31484
+# started 2026-11-10T19:15:25+0000
+Run options: --seed 27299
 
 # Running:
 
 ....
 
-Finished in 0.074298s, 53.8371 runs/s, 174.9706 assertions/s.
+Finished in 0.080421s, 49.7384 runs/s, 161.6499 assertions/s.
 
 4 runs, 13 assertions, 0 failures, 0 errors, 0 skips
 # exit 0
