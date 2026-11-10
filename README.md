@@ -461,7 +461,7 @@ The scripted GUI options are `--panel NAME`, `--actions LIST` (clicks and keys, 
 |---|---|---|
 | `tools` | Every required tool is installed | 0 |
 | `versions` | Records tool versions | 0 |
-| `policy` | AGPL headers, official LICENSE, no CI, no tar, Agda `--safe` | 0 |
+| `policy` | AGPL headers, official LICENSE, no CI besides the Pages workflow, no tar, Agda `--safe` | 0 |
 | `ruby-syntax` | Every Ruby file parses | 0 |
 | `original-js-main` | The pristine original runs | 0 |
 | `regression` | Golden original output and archive hashes | 0 |
