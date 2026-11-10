@@ -1,272 +1,348 @@
 <!DOCTYPE html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- Morphic Helix web frontend — adapted visualization method from protein-folding-bifurcation -->
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Morphic Helix — Advanced Fibonacci Braid</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Morphic Helix Fibonacci — Braid</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-  * { box-sizing: border-box; }
-  body { margin: 0; background: #050508; color: #e8e6dc; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
-  #info {
-    position: absolute; top: 12px; left: 12px; background: rgba(14,16,14,0.85); padding: 12px 16px;
-    border-radius: 10px; font-size: 13px; max-width: 340px; z-index: 10; border: 1px solid #31382c;
-    backdrop-filter: blur(6px);
-  }
-  #info h1 { margin: 0 0 8px; font-size: 17px; color: #d4a24c; font-weight: 600; }
-  #dna-seq { font-family: ui-monospace, monospace; letter-spacing: 0.5px; line-height: 1.4; }
-  .base-A { color: #ff6b9d; } .base-T { color: #6bffea; }
-  #selected { margin-top: 8px; color: #d4a24c; min-height: 1.2em; }
-  #controls {
-    position: absolute; bottom: 12px; left: 12px; background: rgba(14,16,14,0.85); padding: 10px 14px;
-    border-radius: 10px; font-size: 12px; z-index: 10; border: 1px solid #31382c; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
-  }
-  #braid-panel {
-    position: absolute; top: 12px; right: 12px; background: rgba(14,16,14,0.85); padding: 12px 14px;
-    border-radius: 10px; font-size: 11px; max-width: 280px; z-index: 10; border: 1px solid #31382c;
-    font-family: ui-monospace, monospace; line-height: 1.5;
-  }
-  #braid-panel h2 { margin: 0 0 8px; font-size: 13px; color: #d4a24c; font-family: system-ui; }
-  .bit-row { margin: 2px 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  body { font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace; }
+  #world { position: fixed; inset: 0; overflow: hidden; }
+  #helixView { position: absolute; inset: 0; }
+  #helixView canvas { display: block; width: 100%; height: 100%; }
+
+  .overlay { position: absolute; z-index: 10; pointer-events: none; }
+  .overlay > * { pointer-events: auto; }
+  .top-left { top: 16px; left: 20px; }
+  .top-left h1 { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; text-shadow: 0 2px 12px rgba(0,0,0,0.8); }
+  .top-left h1 span { color: #d4a24c; }
+  .top-left p { font-size: 12px; color: #aaa; margin-top: 4px; text-shadow: 0 1px 6px rgba(0,0,0,0.8); }
+  .top-right { top: 16px; right: 20px; text-align: right; }
+  .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.6); border: 1px solid #d4a24c33; border-radius: 20px; padding: 6px 14px; font-size: 11px; color: #d4a24c; backdrop-filter: blur(8px); }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #d4a24c; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 30px 20px 16px; }
+  .controls { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+  .control-group { flex: 1; min-width: 160px; }
+  .control-group label { font-size: 11px; color: #aaa; display: flex; justify-content: space-between; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .control-group label span { color: #d4a24c; font-weight: 700; font-size: 13px; }
+  .control-group input[type=range] { width: 100%; accent-color: #d4a24c; height: 28px; cursor: pointer; }
+  .btn-row { display: flex; gap: 8px; }
+  .btn { padding: 12px 20px; border-radius: 8px; border: none; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+  .btn-primary { background: #d4a24c; color: #0e100e; }
+  .btn-primary:hover { background: #e0b25c; }
+  .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px); }
+
+  .state-banner { position: absolute; top: 80px; left: 20px; z-index: 10; max-width: 340px; padding: 14px 16px; border-radius: 12px; font-size: 13px; line-height: 1.6; backdrop-filter: blur(12px); pointer-events: none; }
+  .state-banner.braid { background: rgba(14,16,14,0.75); border: 1px solid #d4a24c33; color: #e8e6dc; }
+  .state-banner strong { display: block; font-size: 14px; margin-bottom: 4px; color: #d4a24c; }
+
+  .stats { position: absolute; top: 80px; right: 20px; z-index: 10; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+  .stat-card { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; backdrop-filter: blur(8px); min-width: 140px; }
+  .stat-card .lbl { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card .val { font-size: 22px; font-weight: 800; color: #fff; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .stat-card .val.brass { color: #d4a24c; }
+  .stat-card .val.ok { color: #8f8; }
+
+  #landscape { position: absolute; right: 20px; bottom: 110px; z-index: 10; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; }
+  .hint { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 10; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 8px 16px; font-size: 11px; color: #888; pointer-events: none; white-space: nowrap; backdrop-filter: blur(8px); }
+  .hint b { color: #d4a24c; }
+
+  .braid-lanes { position: absolute; bottom: 120px; left: 20px; z-index: 10; background: rgba(0,0,0,0.6); border: 1px solid #31382c; border-radius: 10px; padding: 10px 12px; font-size: 11px; font-family: ui-monospace, monospace; max-width: 280px; pointer-events: none; }
+  .braid-lanes h3 { margin: 0 0 6px; color: #d4a24c; font-size: 12px; font-family: system-ui; }
   .bit-1 { color: #d4a24c; } .bit-0 { color: #5a6a5a; }
-  label { display: flex; align-items: center; gap: 6px; }
-  input[type=range] { accent-color: #d4a24c; }
-  canvas { display: block; }
 </style>
 </head>
 <body>
-<div id="info">
-  <h1>Morphic Helix Fibonacci — Braid</h1>
-  <div id="dna-seq"></div>
-  <div id="selected">Hover or click a base pair</div>
-  <div style="margin-top:8px;color:#888;font-size:11px">Drag to orbit · Scroll to zoom · Click to select</div>
+<div id="world">
+  <div id="helixView"></div>
+
+  <div class="overlay top-left">
+    <h1>Morphic Helix <span>Fibonacci</span> — Braid</h1>
+    <p>B(x, y) = (y, x ⊕ y) · W<sub>n</sub> DNA backbone · B³ = id</p>
+  </div>
+
+  <div class="overlay top-right">
+    <div class="live-badge"><div class="live-dot"></div> LIVE · Fibonacci Engine · Reversible braid</div>
+  </div>
+
+  <div class="state-banner braid" id="stateBanner">
+    <strong>BRAIDED HELIX</strong>
+    Fibonacci word wound into double strand. Drag to rotate.
+  </div>
+
+  <div class="stats">
+    <div class="stat-card"><div class="lbl">Depth n</div><div class="val brass" id="depthStat">6</div></div>
+    <div class="stat-card"><div class="lbl">Bases</div><div class="val" id="lenStat">21</div></div>
+    <div class="stat-card"><div class="lbl">Helix turns</div><div class="val" id="turnsStat">2.00</div></div>
+    <div class="stat-card"><div class="lbl">Reversible</div><div class="val ok" id="revStat">✓</div></div>
+  </div>
+
+  <div class="braid-lanes" id="braidLanes">
+    <h3>Braid lanes</h3>
+    <div id="laneX"></div>
+    <div id="laneY"></div>
+    <div id="laneA"></div>
+    <div id="laneB"></div>
+  </div>
+
+  <canvas id="landscape" width="240" height="140" title="Braid phase"></canvas>
+
+  <div class="hint"><b>Drag</b> to rotate · <b>Scroll</b> to zoom</div>
+
+  <div class="bottom-bar">
+    <div class="controls">
+      <div class="btn-row">
+        <button class="btn btn-primary" id="animBtn" onclick="toggleAnimation()">▶ Auto-Rotate</button>
+        <button class="btn btn-secondary" onclick="resetView()">Reset</button>
+      </div>
+      <div class="control-group">
+        <label>Depth n <span id="depthVal">6</span></label>
+        <input type="range" id="depthSlider" min="2" max="10" step="1" value="6">
+      </div>
+      <div class="control-group">
+        <label>Woundness <span id="woundVal">1.00</span></label>
+        <input type="range" id="woundSlider" min="0" max="1" step="0.01" value="1">
+      </div>
+      <div class="control-group">
+        <label>Speed <span id="speedVal">1.0×</span></label>
+        <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
+      </div>
+    </div>
+  </div>
 </div>
-<div id="braid-panel">
-  <h2>Braid lanes (B³ = id)</h2>
-  <div id="braid-lanes"></div>
-  <div id="braid-status" style="margin-top:8px;color:#8f8"></div>
-</div>
-<div id="controls">
-  <label><input type="checkbox" id="auto" checked> Auto-rotate</label>
-  <label>Speed <input type="range" id="speed" min="0.2" max="3" step="0.1" value="1" style="width:80px"></label>
-  <label>Radius <input type="range" id="radius" min="1.0" max="2.8" step="0.1" value="1.6" style="width:80px"></label>
-  <label>Pitch <input type="range" id="pitch" min="0.2" max="0.8" step="0.05" value="0.4" style="width:80px"></label>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script>
-async function main() {
-  const data = await (await fetch('helix-data.json')).json();
-  const pts = data.helix_points;
-  const colors = { A: 0xff6b9d, T: 0x6bffea, C: 0x6bff6b, G: 0xffd46b };
+// ===== DATA & STATE =====
+let data = null;
+let depth = 6, wound = 1.0, speed = 1;
+let animating = true, animId = null;
+let rotY = 0.4, rotX = 0.2, camDist = 18;
+let mouseDown = false, lastMX = 0, lastMY = 0, dirty = true;
 
-  document.getElementById('dna-seq').innerHTML =
-    `W${data.depth} · ${data.word_length} bases<br><span class="base-A">${data.dna}</span>`;
-  document.getElementById('braid-status').textContent =
-    data.braid.reversible ? '✓ reversible (B⁻¹∘B = id)' : '✗ not reversible';
-
-  function renderBits(label, bits, cls) {
-    const row = document.createElement('div');
-    row.className = 'bit-row';
-    row.innerHTML = `<span style="color:#888">${label}</span> ` +
-      bits.map(b => `<span class="bit-${b}">${b}</span>`).join('');
-    return row;
-  }
-  const lanesEl = document.getElementById('braid-lanes');
-  lanesEl.appendChild(renderBits('x ', data.braid.x));
-  lanesEl.appendChild(renderBits('y ', data.braid.y));
-  lanesEl.appendChild(renderBits('a ', data.braid.a));
-  lanesEl.appendChild(renderBits('b ', data.braid.b));
-
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x050508);
-  scene.fog = new THREE.FogExp2(0x050508, 0.035);
-
-  const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 80);
-  camera.position.set(0, 1.5, 14);
-
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
-  document.body.appendChild(renderer.domElement);
-
-  // Lighting
-  scene.add(new THREE.AmbientLight(0x2a2a3a, 0.4));
-  const key = new THREE.DirectionalLight(0xfff0e0, 1.4);
-  key.position.set(6, 12, 8);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0x6688ff, 0.6);
-  rim.position.set(-8, 4, -6);
-  scene.add(rim);
-  const glow = new THREE.PointLight(0xff6b9d, 1.2, 18);
-  glow.position.set(0, 2, 0);
-  scene.add(glow);
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  let radius = 1.6, pitch = 0.4, auto = true, speed = 1;
-  const spheres = [], rungs = [];
-
-  function rebuild() {
-    // clear previous
-    while (group.children.length) group.remove(group.children[0]);
-    spheres.length = 0; rungs.length = 0;
-
-    const strand1 = [], strand2 = [];
-    const midY = pts.length * pitch * 0.5;
-
-    pts.forEach((p, i) => {
-      const ph = p.phase;
-      const y = p.height * (pitch / 0.4) - midY;
-      const x1 = radius * Math.cos(ph);
-      const z1 = radius * Math.sin(ph);
-      const x2 = radius * Math.cos(ph + Math.PI);
-      const z2 = radius * Math.sin(ph + Math.PI);
-      strand1.push(new THREE.Vector3(x1, y, z1));
-      strand2.push(new THREE.Vector3(x2, y, z2));
-
-      // Base spheres with stronger emissive
-      const geo = new THREE.SphereGeometry(0.2, 16, 16);
-      const mat1 = new THREE.MeshStandardMaterial({
-        color: colors[p.base] || 0xffffff,
-        emissive: colors[p.base] || 0x222222,
-        emissiveIntensity: 0.55,
-        roughness: 0.35, metalness: 0.15
-      });
-      const s1 = new THREE.Mesh(geo, mat1);
-      s1.position.set(x1, y, z1);
-      s1.userData = { index: i, base: p.base, complement: p.complement, side: 1 };
-      group.add(s1); spheres.push(s1);
-
-      const mat2 = new THREE.MeshStandardMaterial({
-        color: colors[p.complement] || 0xaaaaaa,
-        emissive: colors[p.complement] || 0x111111,
-        emissiveIntensity: 0.4,
-        roughness: 0.4, metalness: 0.1
-      });
-      const s2 = new THREE.Mesh(geo, mat2);
-      s2.position.set(x2, y, z2);
-      s2.userData = { index: i, base: p.complement, complement: p.base, side: 2 };
-      group.add(s2); spheres.push(s2);
-
-      // Rung
-      const rungGeo = new THREE.CylinderGeometry(0.035, 0.035, radius * 2.05, 8);
-      const rungMat = new THREE.MeshStandardMaterial({
-        color: 0x3a3a55, transparent: true, opacity: 0.55, emissive: 0x222244, emissiveIntensity: 0.2
-      });
-      const rung = new THREE.Mesh(rungGeo, rungMat);
-      rung.position.set((x1 + x2) / 2, y, (z1 + z2) / 2);
-      rung.lookAt(new THREE.Vector3(x2, y, z2));
-      rung.rotateX(Math.PI / 2);
-      group.add(rung); rungs.push(rung);
-    });
-
-    // Backbones as thicker tubes via multiple lines or simple lines
-    const lineMat1 = new THREE.LineBasicMaterial({ color: 0xff88aa, linewidth: 2 });
-    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand1), lineMat1));
-    const lineMat2 = new THREE.LineBasicMaterial({ color: 0x88aaff, linewidth: 2 });
-    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand2), lineMat2));
-
-    // Subtle particle field
-    const pCount = 80;
-    const pGeo = new THREE.BufferGeometry();
-    const positions = new Float32Array(pCount * 3);
-    for (let i = 0; i < pCount; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const r = radius * (0.6 + Math.random() * 1.4);
-      const h = (Math.random() - 0.5) * pts.length * pitch * 1.2;
-      positions[i*3] = Math.cos(a) * r;
-      positions[i*3+1] = h;
-      positions[i*3+2] = Math.sin(a) * r;
-    }
-    pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const pMat = new THREE.PointsMaterial({ color: 0xd4a24c, size: 0.06, transparent: true, opacity: 0.35 });
-    group.add(new THREE.Points(pGeo, pMat));
-  }
-
-  rebuild();
-
-  // Controls
-  document.getElementById('auto').onchange = e => auto = e.target.checked;
-  document.getElementById('speed').oninput = e => speed = parseFloat(e.target.value);
-  document.getElementById('radius').oninput = e => { radius = parseFloat(e.target.value); rebuild(); };
-  document.getElementById('pitch').oninput = e => { pitch = parseFloat(e.target.value); rebuild(); };
-
-  // Interaction
-  const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
-  let selected = null;
-
-  function onPointerMove(e) {
-    pointer.x = (e.clientX / innerWidth) * 2 - 1;
-    pointer.y = -(e.clientY / innerHeight) * 2 + 1;
-  }
-  renderer.domElement.addEventListener('pointermove', onPointerMove);
-
-  let dragging = false, prevX = 0, prevY = 0;
-  renderer.domElement.addEventListener('pointerdown', e => {
-    dragging = true; prevX = e.clientX; prevY = e.clientY;
-  });
-  renderer.domElement.addEventListener('pointerup', e => {
-    if (!dragging) return;
-    const dx = Math.abs(e.clientX - prevX), dy = Math.abs(e.clientY - prevY);
-    if (dx < 4 && dy < 4) {
-      // click
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(spheres);
-      if (hits.length) {
-        const ud = hits[0].object.userData;
-        selected = ud.index;
-        document.getElementById('selected').innerHTML =
-          `Pair #${ud.index}: <span class="base-${ud.base}">${ud.base}</span>–<span class="base-${ud.complement}">${ud.complement}</span>`;
-        // pulse highlight
-        spheres.forEach(s => {
-          if (s.userData.index === selected) {
-            s.scale.set(1.35, 1.35, 1.35);
-            s.material.emissiveIntensity = 1.1;
-          } else {
-            s.scale.set(1, 1, 1);
-            s.material.emissiveIntensity = s.userData.side === 1 ? 0.55 : 0.4;
-          }
-        });
-      }
-    }
-    dragging = false;
-  });
-  renderer.domElement.addEventListener('pointermove', e => {
-    if (!dragging) return;
-    group.rotation.y += (e.clientX - prevX) * 0.008;
-    group.rotation.x += (e.clientY - prevY) * 0.004;
-    group.rotation.x = Math.max(-0.6, Math.min(0.6, group.rotation.x));
-    prevX = e.clientX; prevY = e.clientY;
-  });
-  renderer.domElement.addEventListener('wheel', e => {
-    e.preventDefault();
-    camera.position.z = Math.max(5, Math.min(28, camera.position.z + e.deltaY * 0.015));
-  }, { passive: false });
-
-  // Animate
-  let t = 0;
-  function animate() {
-    requestAnimationFrame(animate);
-    t += 0.016 * speed;
-    if (auto) group.rotation.y += 0.005 * speed;
-
-    // subtle breathing on glow light
-    glow.intensity = 1.0 + Math.sin(t * 1.5) * 0.25;
-    glow.position.y = Math.sin(t * 0.7) * 1.2;
-
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  window.addEventListener('resize', () => {
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-  });
+// Fibonacci word generator (matches engine)
+function fibWord(n) {
+  if (n <= 0) return [0];
+  if (n === 1) return [0, 1];
+  let a = [0], b = [0, 1];
+  for (let i = 2; i <= n; i++) { const c = b.concat(a); a = b; b = c; }
+  return b;
 }
-main();
+function dnaFromBits(bits) { return bits.map(b => b ? 'T' : 'A').join(''); }
+function complement(base) { return base === 'A' ? 'T' : base === 'T' ? 'A' : base; }
+
+async function load() {
+  try { data = await (await fetch('helix-data.json')).json(); depth = data.depth; }
+  catch { /* fallback */ }
+  rebuild();
+}
+
+// ===== THREE.JS =====
+let scene, camera, renderer, helixGroup;
+function init() {
+  const c = document.getElementById('helixView');
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000);
+  scene.fog = new THREE.Fog(0x000000, 12, 36);
+  camera = new THREE.PerspectiveCamera(50, c.clientWidth / c.clientHeight, 0.1, 100);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(c.clientWidth, c.clientHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  c.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.9); d1.position.set(5, 10, 7); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xd4a24c, 0.35); d2.position.set(-6, -4, -5); scene.add(d2);
+  const p = new THREE.PointLight(0xff6b9d, 0.7, 24); p.position.set(0, 0, 6); scene.add(p);
+
+  helixGroup = new THREE.Group(); scene.add(helixGroup);
+
+  const dom = renderer.domElement;
+  const start = (x, y) => { mouseDown = true; lastMX = x; lastMY = y; };
+  const move = (x, y) => {
+    if (!mouseDown) return;
+    rotY -= (x - lastMX) * 0.008;
+    rotX = Math.max(-1.0, Math.min(1.0, rotX + (y - lastMY) * 0.006));
+    lastMX = x; lastMY = y;
+  };
+  dom.addEventListener('mousedown', e => start(e.clientX, e.clientY));
+  document.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+  document.addEventListener('mouseup', () => mouseDown = false);
+  dom.addEventListener('wheel', e => { e.preventDefault(); camDist = Math.max(8, Math.min(40, camDist + e.deltaY * 0.02)); }, { passive: false });
+}
+
+function clearGroup(g) {
+  while (g.children.length) {
+    const o = g.children.pop();
+    if (o.geometry) o.geometry.dispose();
+    if (o.material) o.material.dispose();
+  }
+}
+
+function buildHelix() {
+  clearGroup(helixGroup);
+  const bits = fibWord(depth);
+  const dna = dnaFromBits(bits);
+  const n = dna.length;
+  const step = 2 * Math.PI / 10.5; // Fibonacci-related period
+  const rise = 0.42;
+  const R = 1.8;
+  const pts1 = [], pts2 = [];
+  const mid = n / 2;
+
+  for (let i = 0; i < n; i++) {
+    const ph = i * step;
+    const y = (i - mid) * rise;
+    // Interpolate woundness: from straight to helix
+    const coil = new THREE.Vector3(0, y, 0);
+    const h1 = new THREE.Vector3(R * Math.cos(ph), y, R * Math.sin(ph));
+    const h2 = new THREE.Vector3(R * Math.cos(ph + Math.PI), y, R * Math.sin(ph + Math.PI));
+    pts1.push(coil.clone().lerp(h1, wound));
+    pts2.push(coil.clone().lerp(h2, wound));
+  }
+
+  const colors = { A: 0xff6b9d, T: 0x6bffea };
+  const curve1 = new THREE.CatmullRomCurve3(pts1);
+  const tube1 = new THREE.Mesh(
+    new THREE.TubeGeometry(curve1, Math.max(40, n * 8), 0.12, 8, false),
+    new THREE.MeshStandardMaterial({ color: 0xffaacc, roughness: 0.35, metalness: 0.15, emissive: 0x331122 })
+  );
+  helixGroup.add(tube1);
+
+  const curve2 = new THREE.CatmullRomCurve3(pts2);
+  const tube2 = new THREE.Mesh(
+    new THREE.TubeGeometry(curve2, Math.max(40, n * 8), 0.12, 8, false),
+    new THREE.MeshStandardMaterial({ color: 0xaaccff, roughness: 0.35, metalness: 0.15, emissive: 0x112233 })
+  );
+  helixGroup.add(tube2);
+
+  const sg = new THREE.SphereGeometry(0.22, 12, 12);
+  pts1.forEach((p, i) => {
+    const base = dna[i];
+    const mat = new THREE.MeshStandardMaterial({
+      color: colors[base] || 0xffffff,
+      emissive: colors[base] || 0x222222,
+      emissiveIntensity: 0.5, roughness: 0.4
+    });
+    const s = new THREE.Mesh(sg, mat);
+    s.position.copy(p);
+    helixGroup.add(s);
+  });
+  pts2.forEach((p, i) => {
+    const base = complement(dna[i]);
+    const mat = new THREE.MeshStandardMaterial({
+      color: colors[base] || 0xaaaaaa,
+      emissive: colors[base] || 0x111111,
+      emissiveIntensity: 0.35, roughness: 0.45
+    });
+    const s = new THREE.Mesh(sg, mat);
+    s.position.copy(p);
+    helixGroup.add(s);
+  });
+
+  // Rungs
+  if (wound > 0.4) {
+    const rMat = new THREE.MeshStandardMaterial({ color: 0x444466, transparent: true, opacity: 0.5 * wound });
+    for (let i = 0; i < n; i++) {
+      const g = new THREE.CylinderGeometry(0.03, 0.03, R * 2.1 * wound, 6);
+      const r = new THREE.Mesh(g, rMat);
+      r.position.copy(pts1[i].clone().lerp(pts2[i], 0.5));
+      r.lookAt(pts2[i]);
+      r.rotateX(Math.PI / 2);
+      helixGroup.add(r);
+    }
+  }
+
+  // Stats
+  const turns = (n / 10.5) * wound;
+  document.getElementById('depthStat').textContent = depth;
+  document.getElementById('depthVal').textContent = depth;
+  document.getElementById('lenStat').textContent = n;
+  document.getElementById('turnsStat').textContent = turns.toFixed(2);
+  document.getElementById('woundVal').textContent = wound.toFixed(2);
+  document.getElementById('revStat').textContent = '✓';
+
+  // Braid lanes (for depth 6 fixed or computed)
+  const word = bits;
+  const y = word.slice(5).concat(word.slice(0, 5));
+  const a = y.slice();
+  const b = word.map((x, i) => x ^ y[i]);
+  function showLane(id, label, arr) {
+    document.getElementById(id).innerHTML = `<span style="color:#888">${label}</span> ` +
+      arr.map(bit => `<span class="bit-${bit}">${bit}</span>`).join('');
+  }
+  showLane('laneX', 'x ', word);
+  showLane('laneY', 'y ', y);
+  showLane('laneA', 'a ', a);
+  showLane('laneB', 'b ', b);
+
+  drawLandscape();
+}
+
+function drawLandscape() {
+  const cv = document.getElementById('landscape'), g = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  g.clearRect(0, 0, W, H);
+  g.strokeStyle = '#555'; g.beginPath(); g.moveTo(20, H/2); g.lineTo(W-20, H/2); g.stroke();
+  g.strokeStyle = '#d4a24c'; g.lineWidth = 2; g.beginPath();
+  for (let i = 0; i <= 100; i++) {
+    const t = i / 100;
+    const y = H/2 - Math.sin(t * Math.PI * 2 * 1.5) * 30 * wound;
+    i ? g.lineTo(20 + t * (W-40), y) : g.moveTo(20 + t * (W-40), y);
+  }
+  g.stroke();
+  g.fillStyle = '#d4a24c'; g.beginPath(); g.arc(20 + wound * (W-40), H/2 - Math.sin(wound * Math.PI * 2 * 1.5) * 30 * wound, 4, 0, 7); g.fill();
+  g.fillStyle = '#aaa'; g.font = '10px monospace'; g.fillText('woundness phase', 10, H-5);
+}
+
+function render() {
+  if (!mouseDown && animating) rotY += 0.006 * speed;
+  camera.position.set(
+    Math.sin(rotY) * Math.cos(rotX) * camDist,
+    Math.sin(rotX) * camDist,
+    Math.cos(rotY) * Math.cos(rotX) * camDist
+  );
+  camera.lookAt(0, 0, 0);
+  if (dirty) { buildHelix(); dirty = false; }
+  renderer.render(scene, camera);
+}
+
+function toggleAnimation() {
+  animating = !animating;
+  document.getElementById('animBtn').textContent = animating ? '⏸ Pause' : '▶ Auto-Rotate';
+}
+function resetView() {
+  rotY = 0.4; rotX = 0.2; camDist = 18; wound = 1; depth = 6;
+  document.getElementById('woundSlider').value = 1;
+  document.getElementById('depthSlider').value = 6;
+  dirty = true;
+}
+
+document.getElementById('depthSlider').addEventListener('input', e => { depth = parseInt(e.target.value); dirty = true; });
+document.getElementById('woundSlider').addEventListener('input', e => { wound = parseFloat(e.target.value); dirty = true; });
+document.getElementById('speedSlider').addEventListener('input', e => {
+  speed = parseFloat(e.target.value);
+  document.getElementById('speedVal').textContent = speed.toFixed(1) + '×';
+});
+window.addEventListener('resize', () => {
+  const c = document.getElementById('helixView');
+  camera.aspect = c.clientWidth / c.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(c.clientWidth, c.clientHeight);
+});
+
+if (typeof THREE === 'undefined') {
+  document.getElementById('helixView').innerHTML = '<p style="color:#f44;padding:120px 20px">Three.js failed to load.</p>';
+} else {
+  init();
+  load();
+  (function loop() { render(); requestAnimationFrame(loop); })();
+}
 </script>
 </body>
 </html>
