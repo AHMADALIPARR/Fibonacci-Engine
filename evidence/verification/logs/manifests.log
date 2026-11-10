@@ -1,4 +1,4 @@
 $ ruby scripts/build_manifests.rb
-# started 2026-11-10T18:52:15+0000
-provenance.json: 4 archive entries; verification.json: 24 checks (all_as_expected=true); files.sha256: 173 files
+# started 2026-11-10T19:16:29+0000
+provenance.json: 4 archive entries; verification.json: 24 checks (all_as_expected=true); files.sha256: 171 files
 # exit 0

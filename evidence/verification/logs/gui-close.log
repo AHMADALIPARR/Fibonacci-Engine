@@ -1,15 +1,15 @@
 $ scripts/gui-close-test.sh
-# started 2026-11-10T18:51:51+0000
+# started 2026-11-10T19:16:05+0000
 OK   wm-close-idle: exited 55 ms after the close request
 OK   escape: exited 98 ms after the close request
-OK   ctrl-q: exited 111 ms after the close request
+OK   ctrl-q: exited 112 ms after the close request
 OK   ctrl-w: 7 of 8 panels closed, window still open
-OK   ctrl-w-last-panel: exited 113 ms after the close request
-OK   panel-close-busy: Agda panel closed and its agda process terminated within 412 ms, window still open
+OK   ctrl-w-last-panel: exited 114 ms after the close request
+OK   panel-close-busy: Agda panel closed and its agda process terminated within 413 ms, window still open
 OK   panel-close-busy: no child process left
 OK   panel-close-busy-then-wm-close: exited 56 ms after the close request
-OK   wm-close-busy: exited 107 ms after the close request
+OK   wm-close-busy: exited 105 ms after the close request
 OK   wm-close-busy: no child process left
-OK   sigterm-busy: exited 154 ms after the close request
+OK   sigterm-busy: exited 103 ms after the close request
 OK   sigterm-busy: no child process left
 # exit 0

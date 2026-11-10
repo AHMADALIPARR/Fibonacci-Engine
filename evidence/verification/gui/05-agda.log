@@ -1,5 +1,5 @@
 
-(morphic_helix.rb:193425): dbind-WARNING **: 18:51:39.169: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+(morphic_helix.rb:199156): dbind-WARNING **: 19:15:53.515: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
 action done: click:btn-agda-check
 action done: click:btn-agda-neg
 state dumped: /workspace/morphic-helix/evidence/verification/gui/05-agda.state.json

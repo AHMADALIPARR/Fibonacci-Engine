@@ -1,12 +1,12 @@
 $ ruby tests/properties/test_properties.rb
-# started 2026-11-10T18:51:11+0000
-Run options: --seed 31450
+# started 2026-11-10T19:15:25+0000
+Run options: --seed 28203
 
 # Running:
 
 ............
 
-Finished in 0.207720s, 57.7701 runs/s, 80685.6330 assertions/s.
+Finished in 0.213135s, 56.3025 runs/s, 78635.7663 assertions/s.
 
 12 runs, 16760 assertions, 0 failures, 0 errors, 0 skips
 # exit 0

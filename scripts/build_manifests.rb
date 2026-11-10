@@ -5,7 +5,9 @@
 # Writes the machine-readable manifests:
 #   evidence/manifests/provenance.json    original archive inventory, toolchains (source, version, sha256/commit)
 #   evidence/manifests/verification.json  every row of evidence/verification/checks.tsv with the log's sha256
-#   evidence/manifests/files.sha256       sha256 of every file in the repository (except this file itself)
+#   evidence/manifests/files.sha256       sha256 of every file in the repository, except this file itself and the two
+#                                         files verify-all.sh finishes writing after this step runs:
+#                                         evidence/verification/checks.tsv and evidence/verification/logs/manifests.log
 require 'json'
 require 'digest'
 require 'zlib'
@@ -109,6 +111,6 @@ ver = { 'schema' => 'morphic-helix/verification/1', 'generated_at' => Time.now.s
 File.write(File.join(MAN, 'verification.json'), JSON.pretty_generate(ver) + "\n")
 
 list = Dir.chdir(ROOT) { Dir.glob('**/*', File::FNM_DOTMATCH).select { |f| File.file?(f) } }
-list.reject! { |f| f == 'evidence/manifests/files.sha256' || f.include?('/_build/') || f.end_with?('.agdai') }
+list.reject! { |f| f == 'evidence/manifests/files.sha256' || f == 'evidence/verification/checks.tsv' || f == 'evidence/verification/logs/manifests.log' || f.include?('/_build/') || f.end_with?('.agdai') }
 File.write(File.join(MAN, 'files.sha256'), list.sort.map { |f| "#{sha(File.join(ROOT, f))}  #{f}\n" }.join)
 puts "provenance.json: #{entries.length} archive entries; verification.json: #{checks.length} checks (all_as_expected=#{ver['all_as_expected']}); files.sha256: #{list.length} files"
