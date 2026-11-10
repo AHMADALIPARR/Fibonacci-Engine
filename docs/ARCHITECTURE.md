@@ -21,7 +21,7 @@ Every claim in this file points at source code, a test, or a log under `evidence
 | `alloy/specifications` | The original `braid_invariant.als` (headered copy), plus `braid_extended.als`, `dna_encoding.als`, and `turing_determinism.als`. |
 | `agda/` | Self-contained proofs that use only `Agda.Builtin.*`. Every module has `{-# OPTIONS --safe --without-K #-}`, which makes `postulate` a type error. `Everything.agda` imports all of them. |
 | `tests/` | `regression` (golden original output and archive hashes), `equivalence` (deterministic vectors compared JS ↔ Ruby ↔ CBQN ↔ Elf), `properties` (seeded and exhaustive Ruby properties, plus Agda and Elf **negative controls** that must be rejected), and `integration` (Elf process boundary and negative controls, Agda theorem table, process-group termination, fail-closed tools). Alloy and Agda are executed once per verification run, by `scripts/alloy-check.rb` and the agda steps of `verify-all.sh`, not again by the tests. |
-| `scripts/` | `verify-all.sh`, `require-tool.sh`, `elf-check.sh`, `alloy-check.rb` (the single Alloy runner; fails unless every command meets a stated expectation), `gui-screenshots.sh`, `gui-close-test.sh`, `run_benchmarks.rb`, `bench_js.js`, `check_policy.rb`, `build_manifests.rb`. Plain shell and Ruby. The only CI configuration is `.github/workflows/pages.yml`, which publishes the existing GUI. |
+| `scripts/` | `verify-all.sh`, `require-tool.sh`, `elf-check.sh`, `alloy-check.rb` (the single Alloy runner; fails unless every command meets a stated expectation), `gui-screenshots.sh`, `gui-close-test.sh`, `run_benchmarks.rb`, `bench_js.js`, `check_policy.rb`, `build_manifests.rb`. Plain shell and Ruby, with no CI configuration. |
 
 ### Process boundaries
 

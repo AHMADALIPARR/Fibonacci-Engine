@@ -6,7 +6,7 @@
 #  * every code file carries both licence header lines in its native comment syntax
 #    (exempt: the byte-exact pristine originals under source/original-archive/pristine/);
 #  * LICENSE is the official GNU AGPLv3 text (sha256 of https://www.gnu.org/licenses/agpl-3.0.txt as downloaded);
-#  * no other licence identifiers, no CI besides .github/workflows/pages.yml, no tar archives;
+#  * no other licence identifiers, no .github/ directory or CI workflow files, no tar archives;
 #  * no Agda escape hatches (postulate, holes) and every Agda module is --safe;
 #  * no Python, TypeScript or React sources in the product.
 require 'digest'
@@ -15,7 +15,7 @@ AGPL_SHA = '0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0'
 L1 = 'SPDX-License-Identifier: AGPL-3.0-only'
 L2 = 'This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3. See the LICENSE file.'
 COMMENT = { '.rb' => '#', '.bqn' => '#', '.sh' => '#', '.js' => '//', '.als' => '//', '.elf' => '%', '.cfg' => '%',
-            '.agda' => '--', '.agda-lib' => '--', '.yml' => '#', '.yaml' => '#', 'Makefile' => '#' }.freeze
+            '.agda' => '--', '.agda-lib' => '--', 'Makefile' => '#' }.freeze
 SKIP_DIRS = %r{\A(evidence|agda/_build|tests/properties/agda-negative/_build|source/original-archive/pristine)/}
 
 errors = []
@@ -36,14 +36,10 @@ files.each do |f|
   errors << "#{f}: missing AGPL notice line" unless head[1] == "#{c} #{L2}"
 end
 errors << 'LICENSE is not the official AGPLv3 text' unless Digest::SHA256.file(File.join(ROOT, 'LICENSE')).hexdigest == AGPL_SHA
-pages_workflow = '.github/workflows/pages.yml'
-if File.directory?(File.join(ROOT, '.github'))
-  extra = Dir.glob(File.join(ROOT, '.github', '**', '*'), File::FNM_DOTMATCH).select { |f| File.file?(f) }.map { |f| f.delete_prefix("#{ROOT}/") }.reject { |f| f == pages_workflow }.sort
-  errors << ".github/ has files other than the Pages workflow: #{extra.join(', ')}" unless extra.empty?
-end
+errors << '.github/ exists' if File.exist?(File.join(ROOT, '.github'))
 errors << 'CI workflow files present' unless Dir.glob(File.join(ROOT, '**/{.gitlab-ci.yml,.travis.yml,azure-pipelines.yml,Jenkinsfile}')).empty?
 Dir.chdir(ROOT) do
-  (Dir['**/*.{rb,bqn,sh,js,als,elf,agda,cfg,yml,yaml}'] + ['Makefile']).each do |f|
+  (Dir['**/*.{rb,bqn,sh,js,als,elf,agda,cfg}'] + ['Makefile']).each do |f|
     next if f.match?(SKIP_DIRS) || f == 'scripts/check_policy.rb' || !File.file?(f)
 
     t = File.read(f)
