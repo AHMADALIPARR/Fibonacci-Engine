@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Morphic Helix — Fibonacci Braid (Web Frontend)</title>
+<style>
+  body { margin: 0; background: #0a0a0a; color: #e0e0e0; font-family: system-ui, sans-serif; overflow: hidden; }
+  #info { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 10px 14px; border-radius: 8px; font-size: 13px; max-width: 320px; z-index: 10; }
+  #info h1 { margin: 0 0 6px; font-size: 16px; color: #d4a24c; }
+  #controls { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 8px 12px; border-radius: 8px; font-size: 12px; }
+  canvas { display: block; }
+  .base-A { color: #ff6b9d; } .base-T { color: #6bffea; }
+</style>
+</head>
+<body>
+<div id="info">
+  <h1>Morphic Helix Fibonacci — Braid</h1>
+  <div id="dna-seq"></div>
+  <div id="braid-status"></div>
+  <div style="margin-top:6px;color:#888">Drag to rotate · Scroll to zoom · Click base pair</div>
+</div>
+<div id="controls">
+  Auto-rotate: <input type="checkbox" id="auto" checked> &nbsp;
+  Zoom: <input type="range" id="zoom" min="0.4" max="3" step="0.1" value="1">
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+async function main() {
+  const data = await (await fetch('helix-data.json')).json();
+  document.getElementById('dna-seq').innerHTML =
+    `W${data.depth} DNA: <span class="base-A">${data.dna}</span> (${data.word_length} bases)`;
+  document.getElementById('braid-status').textContent =
+    `Braid reversible: ${data.braid.reversible} · lanes ${data.braid.x.length}`;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x050508);
+  const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
+  camera.position.set(0, 2, 12);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(devicePixelRatio);
+  document.body.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0x404040));
+  const key = new THREE.DirectionalLight(0xffffff, 1.2);
+  key.position.set(5, 10, 7);
+  scene.add(key);
+  const fill = new THREE.PointLight(0x88aaff, 0.8, 30);
+  fill.position.set(-4, 3, 4);
+  scene.add(fill);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const pts = data.helix_points;
+  const radius = 1.6;
+  const colors = { A: 0xff6b9d, T: 0x6bffea, C: 0x6bff6b, G: 0xffd46b };
+
+  const strand1 = [], strand2 = [];
+  pts.forEach((p, i) => {
+    const ph = p.phase;
+    const y = p.height - pts.length * 0.2;
+    const x1 = radius * Math.cos(ph);
+    const z1 = radius * Math.sin(ph);
+    const x2 = radius * Math.cos(ph + Math.PI);
+    const z2 = radius * Math.sin(ph + Math.PI);
+    strand1.push(new THREE.Vector3(x1, y, z1));
+    strand2.push(new THREE.Vector3(x2, y, z2));
+
+    const geo = new THREE.SphereGeometry(0.18, 12, 12);
+    const mat1 = new THREE.MeshStandardMaterial({ color: colors[p.base] || 0xffffff, emissive: colors[p.base] || 0x222222, emissiveIntensity: 0.4 });
+    const s1 = new THREE.Mesh(geo, mat1);
+    s1.position.set(x1, y, z1);
+    group.add(s1);
+    const mat2 = new THREE.MeshStandardMaterial({ color: colors[p.complement] || 0xaaaaaa, emissive: colors[p.complement] || 0x111111, emissiveIntensity: 0.3 });
+    const s2 = new THREE.Mesh(geo, mat2);
+    s2.position.set(x2, y, z2);
+    group.add(s2);
+
+    const rungGeo = new THREE.CylinderGeometry(0.04, 0.04, radius * 2, 6);
+    const rungMat = new THREE.MeshStandardMaterial({ color: 0x444466, transparent: true, opacity: 0.6 });
+    const rung = new THREE.Mesh(rungGeo, rungMat);
+    rung.position.set((x1+x2)/2, y, (z1+z2)/2);
+    rung.lookAt(new THREE.Vector3(x2, y, z2));
+    rung.rotateX(Math.PI/2);
+    group.add(rung);
+  });
+
+  const lineMat1 = new THREE.LineBasicMaterial({ color: 0xffaacc, linewidth: 2 });
+  const line1 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand1), lineMat1);
+  group.add(line1);
+  const lineMat2 = new THREE.LineBasicMaterial({ color: 0xaaccff, linewidth: 2 });
+  const line2 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand2), lineMat2);
+  group.add(line2);
+
+  let auto = true;
+  document.getElementById('auto').onchange = e => auto = e.target.checked;
+  document.getElementById('zoom').oninput = e => {
+    const z = parseFloat(e.target.value);
+    camera.position.z = 12 / z;
+  };
+
+  let dragging = false, prevX = 0;
+  renderer.domElement.addEventListener('pointerdown', e => { dragging = true; prevX = e.clientX; });
+  renderer.domElement.addEventListener('pointerup', () => dragging = false);
+  renderer.domElement.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    group.rotation.y += (e.clientX - prevX) * 0.01;
+    prevX = e.clientX;
+  });
+  renderer.domElement.addEventListener('wheel', e => {
+    e.preventDefault();
+    camera.position.z = Math.max(4, Math.min(20, camera.position.z + e.deltaY * 0.02));
+  }, { passive: false });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (auto) group.rotation.y += 0.004;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+}
+main();
+</script>
+</body>
+</html>
