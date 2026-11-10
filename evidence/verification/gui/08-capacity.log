@@ -1,4 +1,4 @@
 
-(morphic_helix.rb:193656): dbind-WARNING **: 18:51:49.468: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+(morphic_helix.rb:199380): dbind-WARNING **: 19:16:03.297: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
 action done: set:cap-tflops=250
 state dumped: /workspace/morphic-helix/evidence/verification/gui/08-capacity.state.json

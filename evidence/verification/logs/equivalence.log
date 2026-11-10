@@ -1,12 +1,12 @@
 $ ruby tests/equivalence/test_equivalence.rb
-# started 2026-11-10T18:51:11+0000
-Run options: --seed 48924
+# started 2026-11-10T19:15:25+0000
+Run options: --seed 16521
 
 # Running:
 
 ............
 
-Finished in 4.580533s, 2.6198 runs/s, 147.5811 assertions/s.
+Finished in 4.755789s, 2.5232 runs/s, 142.1426 assertions/s.
 
 12 runs, 676 assertions, 0 failures, 0 errors, 0 skips
 # exit 0

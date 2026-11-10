@@ -1,5 +1,5 @@
 
-(morphic_helix.rb:193595): dbind-WARNING **: 18:51:46.475: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+(morphic_helix.rb:199322): dbind-WARNING **: 19:16:00.304: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
 action done: set:spiral-n=400
 action done: click:btn-spiral-verify
 state dumped: /workspace/morphic-helix/evidence/verification/gui/07-spiral.state.json

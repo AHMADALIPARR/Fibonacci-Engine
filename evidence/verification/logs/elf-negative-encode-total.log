@@ -1,5 +1,5 @@
 $ scripts/elf-check.sh tests/properties/elf-negative/encode-total.elf
-# started 2026-11-10T18:51:18+0000
+# started 2026-11-10T19:15:32+0000
 Twelf 1.7.1+ (r, built 11/10/26 at 17:23:24 on grok-bot-vm-534646961)
 %% OK %%
 %% OK %%
