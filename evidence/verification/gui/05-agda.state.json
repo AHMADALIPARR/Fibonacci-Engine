@@ -1,0 +1,73 @@
+{
+  "panel": "agda",
+  "open_panels": [
+    "fibonacci",
+    "helix",
+    "cbqn",
+    "elf",
+    "agda",
+    "turing",
+    "spiral",
+    "capacity"
+  ],
+  "text_morphs": {
+    "agda-table": [
+      "invariant    theorem                  source                             verification state",
+      "A            invariantA               agda/Fibonacci/Words.agda:18       type-checked (agda exit 0, --safe)",
+      "A            length-fib               agda/Fibonacci/Words.agda:28       type-checked (agda exit 0, --safe)",
+      "B            invariantB               agda/Braid/XorBraid.agda:47        type-checked (agda exit 0, --safe)",
+      "B            braid-unbraid            agda/Braid/XorBraid.agda:51        type-checked (agda exit 0, --safe)",
+      "B            braid-order3             agda/Braid/XorBraid.agda:65        type-checked (agda exit 0, --safe)",
+      "B (Alloy)    reversible               agda/Braid/AlloyReversible.agda:38 type-checked (agda exit 0, --safe)",
+      "C            invariantC               agda/DNA/Encoding.agda:47          type-checked (agda exit 0, --safe)",
+      "C            encodeBits-sound         agda/DNA/Encoding.agda:67          type-checked (agda exit 0, --safe)",
+      "D            xor-closed               agda/Coding/Repetition.agda:34     type-checked (agda exit 0, --safe)",
+      "D            doubly-even              agda/Coding/Repetition.agda:46     type-checked (agda exit 0, --safe)",
+      "D            min-distance-4           agda/Coding/Repetition.agda:67     type-checked (agda exit 0, --safe)",
+      "D            corrects-single-error    agda/Coding/Repetition.agda:97     type-checked (agda exit 0, --safe)",
+      "E            step-deterministic       agda/Turing/Machine.agda:67        type-checked (agda exit 0, --safe)",
+      "E            stepR-deterministic      agda/Turing/Machine.agda:100       type-checked (agda exit 0, --safe)",
+      "F            runTrace-legal           agda/Turing/Trace.agda:34          type-checked (agda exit 0, --safe)",
+      "F            invariantF               agda/Turing/Trace.agda:118         type-checked (agda exit 0, --safe)",
+      "F (example)  accepted                 agda/Turing/Increment.agda:107     type-checked (agda exit 0, --safe)",
+      "G            invariantG               agda/Spiral/Index.agda:292         type-checked (agda exit 0, --safe)",
+      "G            invariantG-Fin           agda/Spiral/Index.agda:318         type-checked (agda exit 0, --safe)",
+      "G            positionFin-injective    agda/Spiral/Index.agda:328         type-checked (agda exit 0, --safe)",
+      "G (vectors)  agrees-with-ruby         agda/Spiral/Vectors.agda:108       type-checked (agda exit 0, --safe)"
+    ],
+    "agda-out": [
+      "Modules that MUST fail to type-check (counterexample / failure information):",
+      "",
+      "InvolutionFalse.agda: exit 42 (rejected, as expected)",
+      "    /workspace/morphic-helix/tests/properties/agda-negative/InvolutionFalse.agda:11,18-22",
+      "    xorV x y != x of type Vec Bool 1",
+      "    when checking that the expression refl has type",
+      "    braid (braid (x , y)) ≡ (x , y)",
+      "PostulateRejected.agda: exit 42 (rejected, as expected)",
+      "    /workspace/morphic-helix/tests/properties/agda-negative/PostulateRejected.agda:10,3-35",
+      "    Cannot postulate anything with safe flag",
+      "    when scope checking the declaration",
+      "      anything : (n : Nat) → n ≡ suc n",
+      "WrongStepCount.agda: exit 42 (rejected, as expected)",
+      "    /workspace/morphic-helix/tests/properties/agda-negative/WrongStepCount.agda:12,9-13",
+      "    9 != 11 of type Nat",
+      "    when checking that the expression refl has type length trace ≡ 11"
+    ]
+  },
+  "events": [
+    {
+      "event": "mouse_down",
+      "x": 170,
+      "y": 445,
+      "morph": "ButtonMorph",
+      "name": "btn-agda-check"
+    },
+    {
+      "event": "mouse_down",
+      "x": 470,
+      "y": 445,
+      "morph": "ButtonMorph",
+      "name": "btn-agda-neg"
+    }
+  ]
+}

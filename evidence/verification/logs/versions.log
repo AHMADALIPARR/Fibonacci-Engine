@@ -1,0 +1,13 @@
+$ ruby --version && node --version && agda --version && java -version 2>&1 && echo quit | twelf-server | head -1 && readlink -f $(command -v bqn) && git -C /opt/toolchains/CBQN rev-parse HEAD && java -jar '/opt/toolchains/org.alloytools.alloy.dist.jar' version 2>&1 | head -3
+# started 2026-11-10T18:51:10+0000
+ruby 3.3.13 (2026-10-23 revision af48f08f21) [x86_64-linux-gnu]
+v24.22.1
+Agda version 2.6.4.3
+openjdk version "21.0.13" 2026-10-20
+OpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)
+Twelf 1.7.1+ (r, built 11/10/26 at 17:23:24 on grok-bot-vm-534646961)
+/opt/toolchains/CBQN/BQN
+588753c83963f5b1e9247bfba9c16758da22a348
+6.2.0
+# exit 0

@@ -1,0 +1,430 @@
+{
+  "schema": "morphic-helix/benchmarks/1",
+  "generated_at": "2026-11-10T18:05:47+0000",
+  "samples": 7,
+  "machine": {
+    "cpu": "Intel(R) Xeon(R) Processor",
+    "logical_cpus": 8,
+    "mem_total": "16386416 kB",
+    "kernel": "Linux 6.12.113+ x86_64",
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "lscpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           46 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  8\nOn-line CPU(s) list:                     0-7\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) Processor\nCPU family:                              6\nModel:                                   207\nThread(s) per core:                      1\nCore(s) per socket:                      8\nSocket(s):                               1\nStepping:                                2\nBogoMIPS:                                4800.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc pebs bts rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq dtes64 vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx_vnni avx512_bf16 wbnoinvd arat vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid bus_lock_detect cldemote movdiri movdir64b fsrm md_clear serialize tsxldtrk amx_bf16 avx512_fp16 amx_tile amx_int8 flush_l1d arch_capabilities\nVirtualization:                          VT-x\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               384 KiB (8 instances)\nL1i cache:                               256 KiB (8 instances)\nL2 cache:                                16 MiB (8 instances)\nL3 cache:                                320 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-7\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Mitigation; TSX disabled\nVulnerability Vmscape:                   Not affected\n",
+    "load_average_at_start": "1.20 1.23 1.19 2/638 165601",
+    "background_note": "Shared VM. Top CPU consumers at start are listed in top_processes_at_start; any busy process competes for cores.",
+    "top_processes_at_start": [
+      "PID %CPU COMMAND",
+      "60861 99.9 factor",
+      "165594 71.4 ruby",
+      "131883  3.7 node",
+      "367  2.1 node",
+      "388  0.8 node"
+    ],
+    "versions": {
+      "bqn": "/opt/toolchains/CBQN/BQN",
+      "node": "v24.22.1",
+      "ruby": "ruby 3.3.13 (2026-10-23 revision af48f08f21) [x86_64-linux-gnu]"
+    }
+  },
+  "measurements": [
+    {
+      "name": "braid.scalar_each",
+      "source": "cbqn",
+      "value": 0.024737968333333332,
+      "unit": "s",
+      "min_s": 0.024543153333333335,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 23.591965039571125,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "braid.array_primitive",
+      "source": "cbqn",
+      "value": 3.05452e-06,
+      "unit": "s",
+      "min_s": 3.053e-06,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.0029130172729492187,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "braid.validated_Braid",
+      "source": "cbqn",
+      "value": 4.218302e-05,
+      "unit": "s",
+      "min_s": 4.191286e-05,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.040228862762451176,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "braid.roundtrip_Unbraid∘Braid",
+      "source": "cbqn",
+      "value": 4.781934e-05,
+      "unit": "s",
+      "min_s": 4.747644e-05,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.04560407638549805,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "batch.one_call_256x4096",
+      "source": "cbqn",
+      "value": 3.12658e-06,
+      "unit": "s",
+      "min_s": 3.1234e-06,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.002981739044189453,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "batch.per_row_calls_256x4096",
+      "source": "cbqn",
+      "value": 6.100105e-05,
+      "unit": "s",
+      "min_s": 6.05509e-05,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.05817513465881347,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "alloc.fib_word_24_by_append",
+      "source": "cbqn",
+      "value": 3.81015e-06,
+      "unit": "s",
+      "min_s": 3.7733e-06,
+      "elements": 121393,
+      "samples": 7,
+      "ns_per_element": 0.03138690039788126,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "alloc.fresh_copy_1M_bits",
+      "source": "cbqn",
+      "value": 4.80786e-06,
+      "unit": "s",
+      "min_s": 4.80042e-06,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.004585132598876953,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "reversible.ms_run_6ops_8x131072",
+      "source": "cbqn",
+      "value": 2.818665e-05,
+      "unit": "s",
+      "min_s": 2.43992e-05,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.026880884170532224,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "reversible.ms_roundtrip_8x131072",
+      "source": "cbqn",
+      "value": 4.88261e-05,
+      "unit": "s",
+      "min_s": 4.8778e-05,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.04656419754028321,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "flop.f64_multiply_add_1M",
+      "source": "cbqn",
+      "value": 0.0015664717,
+      "unit": "s",
+      "min_s": 0.00156174716,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 1.4939038276672365,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "int.i16_add_1M",
+      "source": "cbqn",
+      "value": 0.00018963912,
+      "unit": "s",
+      "min_s": 0.00018819482,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.1808539581298828,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "mem.f64_reverse_copy_16M",
+      "source": "cbqn",
+      "value": 0.0159564738,
+      "unit": "s",
+      "min_s": 0.0151585952,
+      "elements": 16777216,
+      "samples": 7,
+      "ns_per_element": 0.9510799527168273,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "code.rep4_encode_262144",
+      "source": "cbqn",
+      "value": 1.25172e-05,
+      "unit": "s",
+      "min_s": 1.249125e-05,
+      "elements": 262144,
+      "samples": 7,
+      "ns_per_element": 0.047749328613281246,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "code.rep4_decode_262144",
+      "source": "cbqn",
+      "value": 6.24223e-05,
+      "unit": "s",
+      "min_s": 5.917425e-05,
+      "elements": 262144,
+      "samples": 7,
+      "ns_per_element": 0.23812217712402345,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "arrays.entropy_1M_symbols",
+      "source": "cbqn",
+      "value": 0.0010252522,
+      "unit": "s",
+      "min_s": 0.000999793,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 0.9777566909790039,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "spiral.position_vectorised_1M",
+      "source": "cbqn",
+      "value": 0.0464573784,
+      "unit": "s",
+      "min_s": 0.044776798,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 44.30520858764648,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "js.braid_1M",
+      "source": "node (original JS)",
+      "value": 0.014663573099999999,
+      "unit": "s",
+      "min_s": 0.0142941851,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 13.984273052215576,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "js.roundtrip_1M",
+      "source": "node (original JS)",
+      "value": 0.01564689285,
+      "unit": "s",
+      "min_s": 0.015217300950000002,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 14.92203984260559,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "js.rep4_encode_262144",
+      "source": "node (original JS)",
+      "value": 0.016835124200000003,
+      "unit": "s",
+      "min_s": 0.0164584423,
+      "elements": 262144,
+      "samples": 7,
+      "ns_per_element": 64.22090225219728,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "js.fibonacci_words_24",
+      "source": "node (original JS)",
+      "value": 0.00565856495,
+      "unit": "s",
+      "min_s": 0.00561140725,
+      "elements": 121393,
+      "samples": 7,
+      "ns_per_element": 46.613601690377536,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "js.runTM_1011",
+      "source": "node (original JS)",
+      "value": 1.2777135e-06,
+      "unit": "s",
+      "min_s": 1.165426e-06,
+      "elements": 8,
+      "samples": 7,
+      "ns_per_element": 159.71418749999998,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "ruby.braid_1M",
+      "source": "ruby",
+      "value": 0.22056346133346474,
+      "unit": "s",
+      "min_s": 0.21730523900017337,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 210.34570821138834,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "ruby.roundtrip_1M",
+      "source": "ruby",
+      "value": 0.2823589116669609,
+      "unit": "s",
+      "min_s": 0.2784193963331442,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 269.27844206520166,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "ruby.rep4_encode_262144",
+      "source": "ruby",
+      "value": 0.06588008966718917,
+      "unit": "s",
+      "min_s": 0.06259712833343656,
+      "elements": 262144,
+      "samples": 7,
+      "ns_per_element": 251.31259791255633,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "ruby.fibonacci_words_24",
+      "source": "ruby",
+      "value": 0.0007613799995548712,
+      "unit": "s",
+      "min_s": 0.00022508400070364587,
+      "elements": 121393,
+      "samples": 7,
+      "ns_per_element": 6.272025566176561,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "ruby.ms_run_6ops_8x131072",
+      "source": "ruby",
+      "value": 0.5547404959997948,
+      "unit": "s",
+      "min_s": 0.5346015974992042,
+      "elements": 1048576,
+      "samples": 7,
+      "ns_per_element": 529.0417633054684,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "ruby.runTM_1011",
+      "source": "ruby",
+      "value": 1.341248300013831e-05,
+      "unit": "s",
+      "min_s": 1.2918929500301601e-05,
+      "elements": 8,
+      "samples": 7,
+      "ns_per_element": 1676.5603750172886,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "ruby.spiral_position_65536",
+      "source": "ruby",
+      "value": 0.01862217000052624,
+      "unit": "s",
+      "min_s": 0.01814886449938058,
+      "elements": 65536,
+      "samples": 7,
+      "ns_per_element": 284.1517639240454,
+      "kind": "measured wall-clock (median of samples)"
+    },
+    {
+      "name": "speedup.cbqn_array_vs_scalar_each",
+      "value": 8098.807122995866,
+      "unit": "x",
+      "kind": "derived ratio braid.scalar_each / braid.array_primitive"
+    },
+    {
+      "name": "speedup.cbqn_batched_vs_per_row",
+      "value": 19.510471505606763,
+      "unit": "x",
+      "kind": "derived ratio batch.per_row_calls_256x4096 / batch.one_call_256x4096"
+    },
+    {
+      "name": "cost.cbqn_validation_overhead",
+      "value": 13.810032345507642,
+      "unit": "x",
+      "kind": "derived ratio braid.validated_Braid / braid.array_primitive"
+    },
+    {
+      "name": "speedup.cbqn_vs_original_js_braid",
+      "value": 347.61790644671714,
+      "unit": "x",
+      "kind": "derived ratio js.braid_1M / braid.validated_Braid"
+    },
+    {
+      "name": "speedup.cbqn_vs_ruby_braid",
+      "value": 5228.726187301543,
+      "unit": "x",
+      "kind": "derived ratio ruby.braid_1M / braid.validated_Braid"
+    },
+    {
+      "name": "speedup.cbqn_vs_ruby_multistrand",
+      "value": 19680.965847299867,
+      "unit": "x",
+      "kind": "derived ratio ruby.ms_run_6ops_8x131072 / reversible.ms_run_6ops_8x131072"
+    },
+    {
+      "name": "throughput.cbqn_measured_flop_per_s",
+      "value": 1338774265.759158,
+      "unit": "FLOP/s",
+      "kind": "derived from flop.f64_multiply_add_1M (2 float64 FLOP per element: one multiply, one add)"
+    },
+    {
+      "name": "throughput.cbqn_int_add_per_s",
+      "value": 5529323274.649239,
+      "unit": "int-add/s",
+      "kind": "derived from int.i16_add_1M (integer, not FLOPs)"
+    },
+    {
+      "name": "bandwidth.cbqn_reverse_copy",
+      "value": 16.822981027299406,
+      "unit": "GB/s",
+      "kind": "derived from mem.f64_reverse_copy_16M counting 8 B read + 8 B written per element (effective, not peak)"
+    },
+    {
+      "name": "simulation.js_tm_steps_per_s",
+      "value": 6261184.530021793,
+      "unit": "TM steps/s",
+      "kind": "derived: 8 steps per runTM(1011) of the original JS"
+    },
+    {
+      "name": "simulation.ruby_tm_steps_per_s",
+      "value": 596459.2834837147,
+      "unit": "TM steps/s",
+      "kind": "derived: 8 steps per Turing.run(1011) in Ruby (records full history)"
+    },
+    {
+      "name": "throughput.cbqn_xor_bit_ops_per_s",
+      "value": 343286670246.0616,
+      "unit": "bit-XOR/s",
+      "kind": "derived from braid.array_primitive; bitwise operations, NOT floating-point operations (FLOPs)"
+    }
+  ],
+  "raw_files": {
+    "cbqn.tsv": "efd7f921f748c7e902132fd600f28de5efa26bd0d0e014910eb3128b777513a0",
+    "node.tsv": "75f664bdfc08a84ac4c4cc8ebb9ac963eb753ce0d52b2e6021d9bcf4990c0887",
+    "ruby.tsv": "8ceeab5d07a73873bbf7a3d256cb875effe8d456785c77031fcaea809d8fe7c9"
+  },
+  "notes": [
+    "Medians of SAMPLES samples; each sample is the mean over an inner repetition count.",
+    "XOR/bit throughput is bitwise work, not FLOPs. No number here is a physical or Moore-law projection."
+  ]
+}

@@ -1,0 +1,11 @@
+$ scripts/gui-screenshots.sh
+# started 2026-11-10T18:51:24+0000
+OK 01-fibonacci -> evidence/verification/gui/01-fibonacci.png
+OK 02-helix -> evidence/verification/gui/02-helix.png
+OK 03-cbqn -> evidence/verification/gui/03-cbqn.png
+OK 04-elf -> evidence/verification/gui/04-elf.png
+OK 05-agda -> evidence/verification/gui/05-agda.png
+OK 06-turing -> evidence/verification/gui/06-turing.png
+OK 07-spiral -> evidence/verification/gui/07-spiral.png
+OK 08-capacity -> evidence/verification/gui/08-capacity.png
+# exit 0

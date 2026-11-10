@@ -1,0 +1,48 @@
+% SPDX-License-Identifier: AGPL-3.0-only
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3. See the LICENSE file.
+% Symbol types and binary-vector representations (LF signature).
+% Propositions are LF types; derivations are LF objects; runtime computation is proof search
+% (%query / %solve) over these signatures; %total declarations are machine-checked metatheorems.
+
+bit : type.
+b0 : bit.
+b1 : bit.
+
+% Fibonacci symbols of the original JS: A = 0, B = 1. Words are represented with bit (A = b0, B = b1).
+sym : type.
+sa : sym.
+sb : sym.
+sym-bit : sym -> bit -> type.
+%mode sym-bit +S -B.
+sym-bit/a : sym-bit sa b0.
+sym-bit/b : sym-bit sb b1.
+%worlds () (sym-bit _ _).
+%total {} (sym-bit _ _).
+
+bits : type.
+nil : bits.
+cons : bit -> bits -> bits.
+
+nat : type.
+z : nat.
+s : nat -> nat.
+
+plus : nat -> nat -> nat -> type.
+%mode plus +N1 +N2 -N3.
+plus/z : plus z N N.
+plus/s : plus (s N1) N2 (s N3) <- plus N1 N2 N3.
+%worlds () (plus _ _ _).
+%total N (plus N _ _).
+
+len : bits -> nat -> type.
+%mode len +L -N.
+len/nil : len nil z.
+len/cons : len (cons _ L) (s N) <- len L N.
+%worlds () (len _ _).
+%total L (len L _).
+
+eq-bits : bits -> bits -> type.
+eq-bits/refl : eq-bits L L.
+
+eq-nat : nat -> nat -> type.
+eq-nat/refl : eq-nat N N.

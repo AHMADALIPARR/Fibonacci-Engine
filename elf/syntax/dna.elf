@@ -1,0 +1,74 @@
+% SPDX-License-Identifier: AGPL-3.0-only
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3. See the LICENSE file.
+% DNA encoding relations.
+%   compatibility mode (JS DNA=['A','T']): b0 -> adenine, b1 -> thymine
+%   two-bit mode: 00 -> A, 01 -> C, 10 -> G, 11 -> T (first bit high)
+
+base : type.
+ba : base.
+bc : base.
+bg : base.
+bt : base.
+
+bases : type.
+bnil : bases.
+bcons : base -> bases -> bases.
+
+compat : bit -> base -> type.
+%mode compat +B -N.
+compat/0 : compat b0 ba.
+compat/1 : compat b1 bt.
+%worlds () (compat _ _).
+%total {} (compat _ _).
+
+enc2 : bit -> bit -> base -> type.
+%mode enc2 +H +L -N.
+enc2/00 : enc2 b0 b0 ba.
+enc2/01 : enc2 b0 b1 bc.
+enc2/10 : enc2 b1 b0 bg.
+enc2/11 : enc2 b1 b1 bt.
+%worlds () (enc2 _ _ _).
+%total {} (enc2 _ _ _).
+
+dec2 : base -> bit -> bit -> type.
+%mode dec2 +N -H -L.
+dec2/a : dec2 ba b0 b0.
+dec2/c : dec2 bc b0 b1.
+dec2/g : dec2 bg b1 b0.
+dec2/t : dec2 bt b1 b1.
+%worlds () (dec2 _ _ _).
+%total {} (dec2 _ _ _).
+
+% Odd-length bit vectors have no encode derivation: the explicit length policy is rejection.
+encode : bits -> bases -> type.
+%mode encode +L -N.
+encode/nil : encode nil bnil.
+encode/cons : encode (cons H (cons L R)) (bcons N NS) <- enc2 H L N <- encode R NS.
+%worlds () (encode _ _).
+
+decode : bases -> bits -> type.
+%mode decode +N -L.
+decode/nil : decode bnil nil.
+decode/cons : decode (bcons N NS) (cons H (cons L R)) <- dec2 N H L <- decode NS R.
+%worlds () (decode _ _).
+%total N (decode N _).
+
+% Invariant C (per symbol): decode (encode x) = x, as a metatheorem over every enc2 derivation.
+enc2-dec2 : enc2 H L N -> dec2 N H L -> type.
+%mode enc2-dec2 +E -D.
+- : enc2-dec2 enc2/00 dec2/a.
+- : enc2-dec2 enc2/01 dec2/c.
+- : enc2-dec2 enc2/10 dec2/g.
+- : enc2-dec2 enc2/11 dec2/t.
+%worlds () (enc2-dec2 _ _).
+%total E (enc2-dec2 E _).
+
+% Invariant C (vectors): every encode derivation yields a decode derivation back to the same bits.
+encode-decode : encode L NS -> decode NS L -> type.
+%mode encode-decode +E -D.
+- : encode-decode encode/nil decode/nil.
+- : encode-decode (encode/cons E D2) (decode/cons D D1)
+     <- enc2-dec2 D2 D1
+     <- encode-decode E D.
+%worlds () (encode-decode _ _).
+%total E (encode-decode E _).

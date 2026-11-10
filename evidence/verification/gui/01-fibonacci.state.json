@@ -1,0 +1,55 @@
+{
+  "panel": "fibonacci",
+  "open_panels": [
+    "fibonacci",
+    "helix",
+    "cbqn",
+    "elf",
+    "agda",
+    "turing",
+    "spiral",
+    "capacity"
+  ],
+  "text_morphs": {
+    "fib-preview": [
+      "W7  (length 34)",
+      "",
+      "ABAABABAABAABABAABABAABAABABAABAAB",
+      "",
+      "bits:",
+      "0100101001001010010100100101001001",
+      "",
+      "DNA (compat):",
+      "ATAATATAATAATATAATATAATAATATAATAAT",
+      "",
+      "symbol frequencies: A=21  B=13",
+      "Shannon entropy: 0.9596868937742168 bits/symbol"
+    ],
+    "fib-recurrence": [
+      "k   |W_k|  |W_k-1|+|W_k-2|  F(k+2)  check",
+      "0   1      -                1       ok",
+      "1   2      -                2       ok",
+      "2   3      3                3       ok",
+      "3   5      5                5       ok",
+      "4   8      8                8       ok",
+      "5   13     13               13      ok",
+      "6   21     21               21      ok",
+      "7   34     34               34      ok"
+    ],
+    "fib-verify-out": [
+      "Depth n=7. Ruby: length 34",
+      "JS oracle (original fibonacci_braid.js, sha256 f12cebedac49…): length 34 EXACT MATCH",
+      "CBQN (bqn cbqn/cli.bqn fib-word 7): length 34 EXACT MATCH",
+      "Elf (twelf-server, %query fibword): length 34 EXACT MATCH"
+    ]
+  },
+  "events": [
+    {
+      "event": "mouse_down",
+      "x": 230,
+      "y": 462,
+      "morph": "ButtonMorph",
+      "name": "btn-fib-verify"
+    }
+  ]
+}

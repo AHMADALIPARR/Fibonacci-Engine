@@ -1,0 +1,10 @@
+
+(morphic_helix.rb:193848): dbind-WARNING **: 18:52:00.239: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+panel closed: fibonacci
+panel closed: helix
+panel closed: cbqn
+panel closed: elf
+panel closed: agda
+panel closed: turing
+panel closed: spiral
+panel closed: capacity

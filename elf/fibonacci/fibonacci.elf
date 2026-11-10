@@ -1,0 +1,50 @@
+% SPDX-License-Identifier: AGPL-3.0-only
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3. See the LICENSE file.
+% Fibonacci recurrence judgments: W0 = A, W1 = AB, W(n+2) = W(n+1) ++ W(n)   (A = b0, B = b1)
+
+append : bits -> bits -> bits -> type.
+%mode append +L1 +L2 -L3.
+append/nil : append nil L L.
+append/cons : append (cons X L1) L2 (cons X L3) <- append L1 L2 L3.
+%worlds () (append _ _ _).
+%total L (append L _ _).
+
+fibword : nat -> bits -> type.
+%mode fibword +N -W.
+fibword/0 : fibword z (cons b0 nil).
+fibword/1 : fibword (s z) (cons b0 (cons b1 nil)).
+fibword/ss : fibword (s (s N)) W
+              <- fibword (s N) W1
+              <- fibword N W0
+              <- append W1 W0 W.
+%worlds () (fibword _ _).
+%total N (fibword N _).
+
+% Lemma: |L1 ++ L2| = |L1| + |L2|.
+append-len : append L1 L2 L3 -> len L1 N1 -> len L2 N2 -> len L3 N3 -> plus N1 N2 N3 -> type.
+%mode append-len +A +D1 +D2 -D3 -P.
+- : append-len append/nil len/nil D2 D2 plus/z.
+- : append-len (append/cons A) (len/cons D1) D2 (len/cons D3) (plus/s P)
+     <- append-len A D1 D2 D3 P.
+%worlds () (append-len _ _ _ _ _).
+%total A (append-len A _ _ _ _).
+
+% Every bit vector has a length derivation (effectiveness of len, as a metatheorem).
+len-exists : {L:bits} len L N -> type.
+%mode len-exists +L -D.
+- : len-exists nil len/nil.
+- : len-exists (cons _ L) (len/cons D) <- len-exists L D.
+%worlds () (len-exists _ _).
+%total L (len-exists L _).
+
+% Invariant A: for every derivation of W(n+2), its length is |W(n+1)| + |W(n)| for the very
+% sub-derivations used by the recurrence.
+fib-len : fibword (s (s N)) W -> fibword (s N) W1 -> fibword N W0
+          -> len W1 K1 -> len W0 K0 -> len W K -> plus K1 K0 K -> type.
+%mode fib-len +D -D1 -D0 -L1 -L0 -L -P.
+- : fib-len (fibword/ss A D0 D1) D1 D0 L1 L0 L P
+     <- len-exists W1 L1
+     <- len-exists W0 L0
+     <- append-len A L1 L0 L P.
+%worlds () (fib-len _ _ _ _ _ _ _).
+%total D (fib-len D _ _ _ _ _ _).

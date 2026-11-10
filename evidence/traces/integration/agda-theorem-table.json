@@ -1,0 +1,149 @@
+[
+  [
+    "A",
+    "invariantA",
+    "Fibonacci/Words.agda",
+    18,
+    "invariantA : (n : Nat) → length (word (suc (suc n))) ≡ length (word (suc n)) + length (word n)"
+  ],
+  [
+    "A",
+    "length-fib",
+    "Fibonacci/Words.agda",
+    28,
+    "length-fib : (n : Nat) → length (word n) ≡ fib (suc (suc n))"
+  ],
+  [
+    "B",
+    "invariantB",
+    "Braid/XorBraid.agda",
+    47,
+    "invariantB : {n : Nat} (x y : Vec Bool n) → unbraid (braid (x , y)) ≡ (x , y)"
+  ],
+  [
+    "B",
+    "braid-unbraid",
+    "Braid/XorBraid.agda",
+    51,
+    "braid-unbraid : {n : Nat} (a b : Vec Bool n) → braid (unbraid (a , b)) ≡ (a , b)"
+  ],
+  [
+    "B",
+    "braid-order3",
+    "Braid/XorBraid.agda",
+    65,
+    "braid-order3 : {n : Nat} (x y : Vec Bool n) → braid (braid (braid (x , y))) ≡ (x , y)"
+  ],
+  [
+    "B (Alloy)",
+    "reversible",
+    "Braid/AlloyReversible.agda",
+    38,
+    "reversible : {n : Nat} (M : BraidModel n) (p : Fin n) →"
+  ],
+  [
+    "C",
+    "invariantC",
+    "DNA/Encoding.agda",
+    47,
+    "invariantC : {n : Nat} (ps : Vec (Bool × Bool) n) → decode (encode ps) ≡ ps"
+  ],
+  [
+    "C",
+    "encodeBits-sound",
+    "DNA/Encoding.agda",
+    67,
+    "encodeBits-sound : (bs : List Bool) (ns : List Base) → encodeBits bs ≡ just ns → decodeBases ns ≡ bs"
+  ],
+  [
+    "D",
+    "xor-closed",
+    "Coding/Repetition.agda",
+    34,
+    "xor-closed : {n : Nat} (w1 w2 : Vec Bool (quad n)) → InCode w1 → InCode w2 → InCode (xorV w1 w2)"
+  ],
+  [
+    "D",
+    "doubly-even",
+    "Coding/Repetition.agda",
+    46,
+    "doubly-even : {n : Nat} (w : Vec Bool (quad n)) → InCode w → Div4 (weight w)"
+  ],
+  [
+    "D",
+    "min-distance-4",
+    "Coding/Repetition.agda",
+    67,
+    "min-distance-4 : {n : Nat} (u v : Vec Bool n) → u ≢ v → 4 ≤ dist (rep4 u) (rep4 v)"
+  ],
+  [
+    "D",
+    "corrects-single-error",
+    "Coding/Repetition.agda",
+    97,
+    "corrects-single-error : (b : Bool) (j : Fin 4) → decodeV (flip j (block b)) ≡ just b"
+  ],
+  [
+    "E",
+    "step-deterministic",
+    "Turing/Machine.agda",
+    67,
+    "step-deterministic : {c c1 c2 : Config} → Step c c1 → Step c c2 → c1 ≡ c2"
+  ],
+  [
+    "E",
+    "stepR-deterministic",
+    "Turing/Machine.agda",
+    100,
+    "stepR-deterministic : (Rel : State → Sym → Sym → Move → State → Set) → Functional Rel →"
+  ],
+  [
+    "F",
+    "runTrace-legal",
+    "Turing/Trace.agda",
+    34,
+    "runTrace-legal : (n : Nat) (c : Config) → Chain c (runTrace n c)"
+  ],
+  [
+    "F",
+    "invariantF",
+    "Turing/Trace.agda",
+    118,
+    "invariantF : (c : Config) (cs : List Config) → accepts c cs ≡ true →"
+  ],
+  [
+    "F (example)",
+    "accepted",
+    "Turing/Increment.agda",
+    107,
+    "accepted : accepts init trace ≡ true"
+  ],
+  [
+    "G",
+    "invariantG",
+    "Spiral/Index.agda",
+    292,
+    "invariantG : (n : Nat) → index (position n) ≡ n"
+  ],
+  [
+    "G",
+    "invariantG-Fin",
+    "Spiral/Index.agda",
+    318,
+    "invariantG-Fin : {N : Nat} (i : Fin N) → indexFin (positionFin i) (valid i) ≡ i"
+  ],
+  [
+    "G",
+    "positionFin-injective",
+    "Spiral/Index.agda",
+    328,
+    "positionFin-injective : {N : Nat} (i j : Fin N) → positionFin i ≡ positionFin j → i ≡ j"
+  ],
+  [
+    "G (vectors)",
+    "agrees-with-ruby",
+    "Spiral/Vectors.agda",
+    108,
+    "agrees-with-ruby : map position (upto 81) ≡ ruby-positions"
+  ]
+]

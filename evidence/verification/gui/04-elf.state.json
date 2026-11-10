@@ -1,0 +1,75 @@
+{
+  "panel": "elf",
+  "open_panels": [
+    "fibonacci",
+    "helix",
+    "cbqn",
+    "elf",
+    "agda",
+    "turing",
+    "spiral",
+    "capacity"
+  ],
+  "text_morphs": {
+    "elf-decl": [
+
+    ],
+    "elf-out": [
+      "Proof obligations that are EXPECTED to fail (tests/properties/elf-negative):",
+      "",
+      "braid-involution.elf: rejected by Twelf (as expected)",
+      "    Error: ",
+      "    Coverage error --- missing cases:",
+      "    {X1:bits} {X2:bits} {X3:bits} {X4:xorv X1 X2 X3} {X5:braid X2 X3 X1 X2}",
+      "       |- braid-involution (braid/rule X4) X5.",
+      "    ",
+      "    %% ABORT %%",
+      "encode-total.elf: rejected by Twelf (as expected)",
+      "    Error: ",
+      "    Coverage error --- missing cases:",
+      "    {X1:bases} |- encode (cons b0 nil) X1,",
+      "    {X1:bases} |- encode (cons b1 nil) X1.",
+      "    ",
+      "    %% ABORT %%",
+      "xorv-total.elf: rejected by Twelf (as expected)",
+      "    Error: ",
+      "    Coverage error --- missing cases:",
+      "    {X1:bits} {X2:bits} |- xorv (cons b0 X1) nil X2,",
+      "    {X1:bits} {X2:bits} |- xorv (cons b1 X1) nil X2,",
+      "    {X1:bits} {X2:bits} |- xorv nil (cons b0 X1) X2,",
+      "    {X1:bits} {X2:bits} |- xorv nil (cons b1 X1) X2.",
+      "    ",
+      "    %% ABORT %%"
+    ]
+  },
+  "events": [
+    {
+      "event": "mouse_down",
+      "x": 485,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-elf-check"
+    },
+    {
+      "event": "mouse_down",
+      "x": 685,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-elf-tm"
+    },
+    {
+      "event": "mouse_down",
+      "x": 855,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-elf-deriv"
+    },
+    {
+      "event": "mouse_down",
+      "x": 1045,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-elf-neg"
+    }
+  ]
+}

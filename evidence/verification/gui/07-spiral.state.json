@@ -1,0 +1,46 @@
+{
+  "panel": "spiral",
+  "open_panels": [
+    "fibonacci",
+    "helix",
+    "cbqn",
+    "elf",
+    "agda",
+    "turing",
+    "spiral",
+    "capacity"
+  ],
+  "text_morphs": {
+    "spiral-info": [
+      "N = 400",
+      "Ruby verify_bijection: {:ok=>true, :n=>400}",
+      "CBQN VerifyBijection: 1",
+      "CBQN positions == Ruby positions (bit-exact)",
+      "Universal proof: agda/Spiral/Index.agda invariantG (index ∘ position = id for all n)"
+    ],
+    "spiral-history": [
+      "transformation history (most recent last)",
+      "{:op=>\"position\", :index=>0, :ring=>[0, 0, 0], :position=>[0, 0]}",
+      "{:op=>\"position\", :index=>1, :ring=>[1, 0, 0], :position=>[1, 0]}",
+      "{:op=>\"position\", :index=>2, :ring=>[1, 0, 1], :position=>[1, 1]}",
+      "{:op=>\"position\", :index=>3, :ring=>[1, 1, 0], :position=>[0, 1]}",
+      "{:op=>\"position\", :index=>4, :ring=>[1, 1, 1], :position=>[-1, 1]}",
+      "{:op=>\"position\", :index=>5, :ring=>[1, 2, 0], :position=>[-1, 0]}",
+      "{:op=>\"position\", :index=>0, :ring=>[0, 0, 0], :position=>[0, 0]}",
+      "{:op=>\"position\", :index=>1, :ring=>[1, 0, 0], :position=>[1, 0]}",
+      "{:op=>\"position\", :index=>2, :ring=>[1, 0, 1], :position=>[1, 1]}",
+      "{:op=>\"position\", :index=>3, :ring=>[1, 1, 0], :position=>[0, 1]}",
+      "{:op=>\"position\", :index=>4, :ring=>[1, 1, 1], :position=>[-1, 1]}",
+      "{:op=>\"position\", :index=>5, :ring=>[1, 2, 0], :position=>[-1, 0]}"
+    ]
+  },
+  "events": [
+    {
+      "event": "mouse_down",
+      "x": 610,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-spiral-verify"
+    }
+  ]
+}

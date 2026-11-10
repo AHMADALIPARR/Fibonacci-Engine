@@ -1,0 +1,20 @@
+{
+  "fibonacciLength": 21,
+  "dna": "ATAATATAATAATATAATATA",
+  "braidReversible": true,
+  "codeLength": 84,
+  "doublyEven": true,
+  "codeXorClosed": true,
+  "turingMachine": {
+    "status": "HALT",
+    "steps": 8,
+    "output": "1100"
+  },
+  "modeledCapacity": {
+    "hypotheticalTargetTFLOPS": 100,
+    "seconds": 1,
+    "operations": 100000000000000,
+    "hypotheticalSteps": 100000000000,
+    "note": "A budget projection only. Turing-machine steps and bitwise XOR are NOT floating-point operations."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "panel": "turing",
+  "open_panels": [
+    "fibonacci",
+    "helix",
+    "cbqn",
+    "elf",
+    "agda",
+    "turing",
+    "spiral",
+    "capacity"
+  ],
+  "text_morphs": {
+    "tm-status": [
+      "state: scan",
+      "head: 1",
+      "steps: 1",
+      "tape: 1011",
+      "history position 1/2 (recorded configurations)",
+      "running / ready",
+      "trace legal (re-executed from the initial configuration): true"
+    ],
+    "tm-rules": [
+      "transition table (state:symbol → write, move, next)",
+      "  scan:0   → 0 R scan",
+      "  scan:1   → 1 R scan",
+      "  scan:_   → _ L carry",
+      "  carry:1  → 0 L carry",
+      "  carry:0  → 1 S HALT",
+      "  carry:_  → 1 S HALT"
+    ],
+    "tm-trace": [
+      "input 1011, limit 50",
+      "Ruby : {\"status\"=>\"HALT\", \"steps\"=>8, \"head\"=>1, \"tape\"=>\"1100\"}",
+      "JS   : {\"status\"=>\"HALT\", \"state\"=>\"HALT\", \"head\"=>1, \"steps\"=>8, \"tape\"=>\"1100\"}",
+      "Elf  : {\"status\"=>\"HALT\", \"state\"=>\"halt\", \"steps\"=>8, \"output\"=>\"1100\"}",
+      "",
+      "Ruby == JS oracle (status, steps, head, tape)",
+      "Ruby == Elf (steps, tape)"
+    ]
+  },
+  "events": [
+    {
+      "event": "mouse_down",
+      "x": 330,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-tm-load"
+    },
+    {
+      "event": "mouse_down",
+      "x": 420,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-tm-step"
+    },
+    {
+      "event": "mouse_down",
+      "x": 420,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-tm-step"
+    },
+    {
+      "event": "mouse_down",
+      "x": 510,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-tm-run"
+    },
+    {
+      "event": "mouse_down",
+      "x": 695,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-tm-back"
+    },
+    {
+      "event": "mouse_down",
+      "x": 945,
+      "y": 105,
+      "morph": "ButtonMorph",
+      "name": "btn-tm-verify"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "schema": "morphic-helix/provenance/1",
+  "generated_at": "2026-11-10T18:52:15+0000",
+  "original_archive": {
+    "path": "source/original-archive/fibonacci_braid_engine.zip",
+    "received_as": "b3c88e301b2ccde8bd946b981c16a1dd10ce96a0a89a2d0bd959c2611ee7e763.zip",
+    "size": 3882,
+    "sha256": "1b39430f025b548d51f93d35e765e4f54d1e4641229158080c0c3164cc6f7439",
+    "entries": [
+      {
+        "name": "fibonacci_braid/",
+        "size": 0,
+        "compressed_size": 0,
+        "method": "stored",
+        "crc32": "00000000",
+        "sha256": null,
+        "dos_datetime": "2026-11-10 16:36:28"
+      },
+      {
+        "name": "fibonacci_braid/README.md",
+        "size": 1312,
+        "compressed_size": 781,
+        "method": "deflate",
+        "crc32": "f8970bec",
+        "sha256": "1bb135f8ad894e376256b412da8b74854007ce0bcfdb67228068edf11199327c",
+        "dos_datetime": "2026-11-10 16:36:36",
+        "pristine_copy": "source/original-archive/pristine/fibonacci_braid/README.md (byte-identical)"
+      },
+      {
+        "name": "fibonacci_braid/fibonacci_braid.js",
+        "size": 4776,
+        "compressed_size": 1974,
+        "method": "deflate",
+        "crc32": "5495676d",
+        "sha256": "f12cebedac499267d2cc7096dae429914f2b801898d66a055a2d9f97bdbd24f2",
+        "dos_datetime": "2026-11-10 16:36:02",
+        "pristine_copy": "source/original-archive/pristine/fibonacci_braid/fibonacci_braid.js (byte-identical)"
+      },
+      {
+        "name": "fibonacci_braid/braid_invariant.als",
+        "size": 786,
+        "compressed_size": 373,
+        "method": "deflate",
+        "crc32": "9048a417",
+        "sha256": "ad17b3bcbfa37325cb77564e0a5eeb310876efa892136a184c930a1edfb929fb",
+        "dos_datetime": "2026-11-10 16:36:28",
+        "pristine_copy": "source/original-archive/pristine/fibonacci_braid/braid_invariant.als (byte-identical)"
+      }
+    ]
+  },
+  "licence": {
+    "file": "LICENSE",
+    "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+    "source": "https://www.gnu.org/licenses/agpl-3.0.txt",
+    "spdx": "AGPL-3.0-only"
+  },
+  "toolchains": {
+    "ruby": {
+      "version": "ruby 3.3.13 (2026-10-23 revision af48f08f21) [x86_64-linux-gnu]",
+      "source": "Debian package ruby",
+      "dpkg": "1:3.3+b1"
+    },
+    "ruby-gtk3": {
+      "source": "Debian package ruby-gtk3",
+      "dpkg": "4.2.2-2+b2"
+    },
+    "node": {
+      "version": "v24.22.1",
+      "source": "preinstalled on the build machine",
+      "path": "/usr/local/bin/node"
+    },
+    "agda": {
+      "version": "Agda version 2.6.4.3",
+      "source": "Debian package agda-bin",
+      "dpkg": "2.6.4.3-1+b2",
+      "note": "proof modules use only Agda.Builtin.*; agda-stdlib is installed but not imported"
+    },
+    "java": {
+      "version": "openjdk version \"21.0.13\" 2026-10-20",
+      "source": "Debian package openjdk-21"
+    },
+    "alloy": {
+      "version": "6.2.0",
+      "path": "/opt/toolchains/org.alloytools.alloy.dist.jar",
+      "sha256": "6b8c1cb5bc93bedfc7c61435c4e1ab6e688a242dc702a394628d9a9801edb78d",
+      "source": "https://github.com/AlloyTools/org.alloytools.alloy/releases/download/v6.2.0/org.alloytools.alloy.dist.jar"
+    },
+    "cbqn": {
+      "source": "https://github.com/dzaima/CBQN.git",
+      "commit": "588753c83963f5b1e9247bfba9c16758da22a348",
+      "build": "make -j8 o3",
+      "bytecode_submodule_commit": "f4495bb591367cd7f1c7ecee6bcc5bfed6dc1612",
+      "binary_sha256": "2e02935bf6dd650aef239b72ade080df50cc2518172ceb448c633993d5c8d013",
+      "path": "/usr/local/bin/bqn -> /opt/toolchains/CBQN/BQN"
+    },
+    "twelf": {
+      "source": "https://github.com/standardml/twelf.git",
+      "commit": "4224d07cf7a32f69321fd0878043e84539163ee0",
+      "build": "make mlton",
+      "banner": "Twelf 1.7.1+ (r, built 11/10/26 at 17:23:24 on grok-bot-vm-534646961)",
+      "binary_sha256": "87a7f980435f943e12576cfd2788b78aa64479bdd133727870e94107f3341edd",
+      "not_used": {
+        "file": "/opt/toolchains/twelf-linux-1.7.1.tar.gz",
+        "sha256": "005b5708d212b188be516be4cebb65656ff3a23ad3e324630013296f5aedadfe",
+        "reason": "release binary is a 32-bit i386 ELF and failed to execute (\"No such file or directory\"); Twelf was built from source instead"
+      }
+    },
+    "mlton": {
+      "version": "sh: 1: mlton: not found",
+      "file": "/opt/toolchains/mlton-20241230-1.amd64-linux.ubuntu-24.04_glibc2.39.tgz",
+      "sha256": "95d5e78c77161aeefb2cff562fabd30ba1678338713c50147e5000f9ba481593",
+      "source": "https://github.com/MLton/mlton/releases/download/on-20241230-release/mlton-20241230-1.amd64-linux.ubuntu-24.04_glibc2.39.tgz",
+      "role": "build-time only (compiles Twelf)"
+    },
+    "dpkg_versions": {
+      "ruby": "1:3.3+b1",
+      "ruby-gtk3": "4.2.2-2+b2",
+      "agda-bin": "2.6.4.3-1+b2",
+      "agda-stdlib": "2.1-4",
+      "openjdk-21-jre-headless": "21.0.13+9-1~deb13u2",
+      "nodejs": "",
+      "xvfb": "2:21.1.16-1.3+deb13u4",
+      "imagemagick": "8:7.1.1.43+dfsg1-1+deb13u14",
+      "openbox": "3.6.1-12+b2",
+      "xdotool": "1:3.20160805.1-5.1+cursor1",
+      "wmctrl": "1.07+git20240228.1105759-1",
+      "build-essential": "12.12",
+      "libgmp-dev": "2:6.3.0+dfsg-3"
+    }
+  },
+  "build_machine": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "kernel": "Linux 6.12.113+ x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor",
+    "logical_cpus": 8
+  }
+}

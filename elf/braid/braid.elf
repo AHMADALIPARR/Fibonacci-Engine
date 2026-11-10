@@ -1,0 +1,85 @@
+% SPDX-License-Identifier: AGPL-3.0-only
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3. See the LICENSE file.
+% Braid transition judgments:  B(x,y) = (y, x XOR y),  B^-1(a,b) = (a XOR b, a).
+% Unequal-length lanes have no xorv derivation: the explicit length policy is rejection.
+
+xor : bit -> bit -> bit -> type.
+%mode xor +X +Y -Z.
+xor/00 : xor b0 b0 b0.
+xor/01 : xor b0 b1 b1.
+xor/10 : xor b1 b0 b1.
+xor/11 : xor b1 b1 b0.
+%worlds () (xor _ _ _).
+%total {} (xor _ _ _).
+
+xorv : bits -> bits -> bits -> type.
+%mode xorv +X +Y -Z.
+xorv/nil : xorv nil nil nil.
+xorv/cons : xorv (cons X L) (cons Y M) (cons Z N) <- xor X Y Z <- xorv L M N.
+%worlds () (xorv _ _ _).
+
+braid : bits -> bits -> bits -> bits -> type.
+%mode braid +X +Y -A -B.
+braid/rule : braid X Y Y Z <- xorv X Y Z.
+%worlds () (braid _ _ _ _).
+
+unbraid : bits -> bits -> bits -> bits -> type.
+%mode unbraid +A +B -X -Y.
+unbraid/rule : unbraid A B Z A <- xorv A B Z.
+%worlds () (unbraid _ _ _ _).
+
+% XOR identity: x XOR y = z implies y XOR z = x.
+xor-shift : xor X Y Z -> xor Y Z X -> type.
+%mode xor-shift +D -E.
+- : xor-shift xor/00 xor/00.
+- : xor-shift xor/01 xor/11.
+- : xor-shift xor/10 xor/01.
+- : xor-shift xor/11 xor/10.
+%worlds () (xor-shift _ _).
+%total D (xor-shift D _).
+
+xorv-shift : xorv X Y Z -> xorv Y Z X -> type.
+%mode xorv-shift +D -E.
+- : xorv-shift xorv/nil xorv/nil.
+- : xorv-shift (xorv/cons V D) (xorv/cons V' D') <- xor-shift D D' <- xorv-shift V V'.
+%worlds () (xorv-shift _ _).
+%total D (xorv-shift D _).
+
+% Invariant B: every braid derivation B(x,y) = (a,b) yields an unbraid derivation B^-1(a,b) = (x,y).
+braid-inverse : braid X Y A B -> unbraid A B X Y -> type.
+%mode braid-inverse +D -E.
+- : braid-inverse (braid/rule V) (unbraid/rule V') <- xorv-shift V V'.
+%worlds () (braid-inverse _ _).
+%total D (braid-inverse D _).
+
+% And the other direction: B(B^-1(a,b)) = (a,b).
+xor-swap : xor X Y Z -> xor Y X Z -> type.
+%mode xor-swap +D -E.
+- : xor-swap xor/00 xor/00.
+- : xor-swap xor/01 xor/10.
+- : xor-swap xor/10 xor/01.
+- : xor-swap xor/11 xor/11.
+%worlds () (xor-swap _ _).
+%total D (xor-swap D _).
+
+xor-back : xor X Y Z -> xor Z X Y -> type.
+%mode xor-back +D -E.
+- : xor-back xor/00 xor/00.
+- : xor-back xor/01 xor/10.
+- : xor-back xor/10 xor/11.
+- : xor-back xor/11 xor/01.
+%worlds () (xor-back _ _).
+%total D (xor-back D _).
+
+xorv-back : xorv X Y Z -> xorv Z X Y -> type.
+%mode xorv-back +D -E.
+- : xorv-back xorv/nil xorv/nil.
+- : xorv-back (xorv/cons V D) (xorv/cons V' D') <- xor-back D D' <- xorv-back V V'.
+%worlds () (xorv-back _ _).
+%total D (xorv-back D _).
+
+unbraid-inverse : unbraid A B X Y -> braid X Y A B -> type.
+%mode unbraid-inverse +D -E.
+- : unbraid-inverse (unbraid/rule V) (braid/rule V') <- xorv-back V V'.
+%worlds () (unbraid-inverse _ _).
+%total D (unbraid-inverse D _).

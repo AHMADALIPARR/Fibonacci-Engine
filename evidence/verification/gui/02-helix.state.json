@@ -1,0 +1,59 @@
+{
+  "panel": "helix",
+  "open_panels": [
+    "fibonacci",
+    "helix",
+    "cbqn",
+    "elf",
+    "agda",
+    "turing",
+    "spiral",
+    "capacity"
+  ],
+  "text_morphs": {
+    "braid-out": [
+      "lane length 21; stage: inverse",
+      "a = 010010010100101001001",
+      "b = 000000110000000000011",
+      "restored x == x: true   restored y == y: true",
+      "rep4(a): length 84, weight 32 (mod 4 = 0); strict decode == a: true"
+    ]
+  },
+  "events": [
+    {
+      "event": "mouse_down",
+      "x": 90,
+      "y": 509,
+      "morph": "ButtonMorph",
+      "name": "btn-braid-forward"
+    },
+    {
+      "event": "mouse_down",
+      "x": 240,
+      "y": 509,
+      "morph": "ButtonMorph",
+      "name": "btn-braid-inverse"
+    },
+    {
+      "event": "mouse_down",
+      "x": 750,
+      "y": 441,
+      "morph": "ButtonMorph",
+      "name": "btn-helix-next"
+    },
+    {
+      "event": "mouse_down",
+      "x": 750,
+      "y": 441,
+      "morph": "ButtonMorph",
+      "name": "btn-helix-next"
+    },
+    {
+      "event": "mouse_down",
+      "x": 65,
+      "y": 441,
+      "morph": "ButtonMorph",
+      "name": "btn-helix-zoom-in"
+    }
+  ]
+}
