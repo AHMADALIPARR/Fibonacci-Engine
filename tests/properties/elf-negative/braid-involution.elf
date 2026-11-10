@@ -1,0 +1,8 @@
+% SPDX-License-Identifier: AGPL-3.0-only
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3. See the LICENSE file.
+% EXPECTED TO FAIL: claims B is an involution (B(B(x,y)) = (x,y)); B has order 3, not 2.
+braid-involution : braid X Y A B -> braid A B X Y -> type.
+%mode braid-involution +D -E.
+- : braid-involution (braid/rule V) (braid/rule V') <- xorv-shift V V'.
+%worlds () (braid-involution _ _).
+%total D (braid-involution D _).

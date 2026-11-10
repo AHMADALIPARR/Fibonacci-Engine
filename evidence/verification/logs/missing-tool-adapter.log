@@ -1,0 +1,8 @@
+$ MH_BQN=/nonexistent/bqn ruby -e 'require "./ruby/adapters/cbqn_adapter"; MorphicHelix::CBQNAdapter.new.call("fibs", 5)'
+# started 2026-11-10T18:51:24+0000
+/workspace/morphic-helix/ruby/adapters/process_runner.rb:106:in `which': missing bqn (MorphicHelix::MissingTool)
+	from /workspace/morphic-helix/ruby/adapters/cbqn_adapter.rb:19:in `bqn_path'
+	from /workspace/morphic-helix/ruby/adapters/cbqn_adapter.rb:28:in `call'
+	from -e:1:in `<main>'
+# exit 1
+# required failure text: missing bqn (MorphicHelix::MissingTool)

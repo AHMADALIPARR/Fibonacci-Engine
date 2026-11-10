@@ -1,0 +1,3 @@
+$ scripts/require-tool.sh ruby node bqn twelf-server agda java Xvfb import openbox xdotool wmctrl pgrep && test -f '/opt/toolchains/org.alloytools.alloy.dist.jar' || { echo 'missing alloy jar /opt/toolchains/org.alloytools.alloy.dist.jar'; exit 127; }
+# started 2026-11-10T18:51:10+0000
+# exit 0

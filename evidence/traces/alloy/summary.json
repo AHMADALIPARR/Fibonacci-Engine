@@ -1,0 +1,180 @@
+[
+  {
+    "spec": "alloy/specifications/braid_extended.als",
+    "exit_status": 0,
+    "commands": [
+      {
+        "name": "LeftInverse",
+        "type": "check",
+        "source": "check LeftInverse for exactly 8 Pos",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "RightInverse",
+        "type": "check",
+        "source": "check RightInverse for exactly 8 Pos",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "InvolutionClaim",
+        "type": "check",
+        "source": "check InvolutionClaim for exactly 1 Pos",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "COUNTEREXAMPLE",
+        "expect": 1,
+        "as_expected": true,
+        "expected_outcome": "COUNTEREXAMPLE"
+      },
+      {
+        "name": "OrderThree",
+        "type": "check",
+        "source": "check OrderThree for exactly 4 Pos, 1..12 steps",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "OrderNotOne",
+        "type": "check",
+        "source": "check OrderNotOne for exactly 1 Pos, 1..4 steps",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "COUNTEREXAMPLE",
+        "expect": 1,
+        "as_expected": true,
+        "expected_outcome": "COUNTEREXAMPLE"
+      }
+    ]
+  },
+  {
+    "spec": "alloy/specifications/braid_invariant.als",
+    "exit_status": 0,
+    "commands": [
+      {
+        "name": "Reversible",
+        "type": "check",
+        "source": "check Reversible for exactly 8 Pos",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": null,
+        "as_expected": null,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "run$2",
+        "type": "run",
+        "source": "run {} for exactly 8 Pos",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "INSTANCE",
+        "expect": null,
+        "as_expected": null,
+        "expected_outcome": "INSTANCE"
+      }
+    ]
+  },
+  {
+    "spec": "alloy/specifications/dna_encoding.als",
+    "exit_status": 0,
+    "commands": [
+      {
+        "name": "DecodeEncode",
+        "type": "check",
+        "source": "check DecodeEncode",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "EncodeDecode",
+        "type": "check",
+        "source": "check EncodeDecode",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "Injective",
+        "type": "check",
+        "source": "check Injective",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "CompatInjective",
+        "type": "check",
+        "source": "check CompatInjective",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "CompatOnto",
+        "type": "check",
+        "source": "check CompatOnto",
+        "overall_scope": -1,
+        "bitwidth": 4,
+        "outcome": "COUNTEREXAMPLE",
+        "expect": 1,
+        "as_expected": true,
+        "expected_outcome": "COUNTEREXAMPLE"
+      }
+    ]
+  },
+  {
+    "spec": "alloy/specifications/turing_determinism.als",
+    "exit_status": 0,
+    "commands": [
+      {
+        "name": "Deterministic",
+        "type": "check",
+        "source": "check Deterministic for 4",
+        "overall_scope": 4,
+        "bitwidth": 4,
+        "outcome": "NO_COUNTEREXAMPLE",
+        "expect": 0,
+        "as_expected": true,
+        "expected_outcome": "NO_COUNTEREXAMPLE"
+      },
+      {
+        "name": "DeterministicWithoutFunctionality",
+        "type": "check",
+        "source": "check DeterministicWithoutFunctionality for 4",
+        "overall_scope": 4,
+        "bitwidth": 4,
+        "outcome": "COUNTEREXAMPLE",
+        "expect": 1,
+        "as_expected": true,
+        "expected_outcome": "COUNTEREXAMPLE"
+      }
+    ]
+  }
+]

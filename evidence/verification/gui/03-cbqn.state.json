@@ -1,0 +1,56 @@
+{
+  "panel": "cbqn",
+  "open_panels": [
+    "fibonacci",
+    "helix",
+    "cbqn",
+    "elf",
+    "agda",
+    "turing",
+    "spiral",
+    "capacity"
+  ],
+  "text_morphs": {
+    "cbqn-out": [
+      "braid        MATCH  010010010100101001001",
+      "weight       MATCH  8",
+      "distmat      MATCH  0 0",
+      "inspect      MATCH  2 8",
+      "pack         MATCH  21 74 74 80",
+      "rep4         MATCH  000011110000000011110000111100000000111100000000111100001111000000001111000011110000",
+      "closure      MATCH  1",
+      "doubly-even  MATCH  1",
+      "fib-permute  MATCH  000000000111111110000",
+      "entropy      MATCH  0.9587118829771317",
+      "spiral       MATCH  0,0 1,0 1,1 0,1 -1,1 -1,0 -1,-1 0,-1 1,-1 2,-1 2,0 2,1 2,2 1,2 0,2 -1,2 -2,2 -2,1 -2,0 -2,",
+      "ms-run       MATCH  MH1|k=3|n=8|01001010|01001001|00000011",
+      "ms-period    MATCH  3",
+      "",
+      "13/13 operations bit-exact between CBQN and Ruby"
+    ],
+    "cbqn-history": [
+      "exit=0  bqn cli.bqn braid 010010100100101001010 010010010100101001001  →  010010010100101001001",
+      "exit=0  bqn cli.bqn weight 010010100100101001010  →  8",
+      "exit=0  bqn cli.bqn distmat 01001010,01001010  →  0 0",
+      "exit=0  bqn cli.bqn inspect 01001010,01001010  →  2 8",
+      "exit=0  bqn cli.bqn pack 010010100100101001010  →  21 74 74 80",
+      "exit=0  bqn cli.bqn rep4 010010100100101001010  →  000011110000000011110000111100000000111100000000111100001111",
+      "exit=0  bqn cli.bqn closure 00000000,00011110,00101101,00110011,01001011,01010101,01100110,01111000,10000111,10011001,10101010,10110100,11001100,110  →  1",
+      "exit=0  bqn cli.bqn doubly-even 00000000,00011110,00101101,00110011,01001011,01010101,01100110,01111000,10000111,10011001,10101010,10110100,11001100,110  →  1",
+      "exit=0  bqn cli.bqn fib-permute 010010100100101001010  →  000000000111111110000",
+      "exit=0  bqn cli.bqn entropy ATAATATAATAATATAATATA  →  0.9587118829771317",
+      "exit=0  bqn cli.bqn spiral 21  →  0,0 1,0 1,1 0,1 -1,1 -1,0 -1,-1 0,-1 1,-1 2,-1 2,0 2,1 2,2 1",
+      "exit=0  bqn cli.bqn ms-run 01001010,01001001,00000011 S:0 X:1>2 P:2,0,1  →  MH1|k=3|n=8|01001010|01001001|00000011",
+      "exit=0  bqn cli.bqn ms-period 1000 01001010,01001001,00000011 S:0 X:1>2 P:2,0,1  →  3"
+    ]
+  },
+  "events": [
+    {
+      "event": "mouse_down",
+      "x": 510,
+      "y": 165,
+      "morph": "ButtonMorph",
+      "name": "btn-cbqn-all"
+    }
+  ]
+}

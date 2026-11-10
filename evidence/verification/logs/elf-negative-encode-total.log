@@ -1,0 +1,452 @@
+$ scripts/elf-check.sh tests/properties/elf-negative/encode-total.elf
+# started 2026-11-10T18:51:18+0000
+Twelf 1.7.1+ (r, built 11/10/26 at 17:23:24 on grok-bot-vm-534646961)
+%% OK %%
+%% OK %%
+[Opening file sources.cfg]
+[Closing file sources.cfg]
+%% OK %%
+[Opening file syntax/syntax.elf]
+bit : type.
+b0 : bit.
+b1 : bit.
+sym : type.
+sa : sym.
+sb : sym.
+sym-bit : sym -> bit -> type.
+%mode +{S:sym} -{B:bit} (sym-bit S B).
+sym-bit/a : sym-bit sa b0.
+sym-bit/b : sym-bit sb b1.
+%worlds () (sym-bit _ _).
+%total {} (sym-bit _ _).
+bits : type.
+nil : bits.
+cons : bit -> bits -> bits.
+nat : type.
+z : nat.
+s : nat -> nat.
+plus : nat -> nat -> nat -> type.
+%mode +{N1:nat} +{N2:nat} -{N3:nat} (plus N1 N2 N3).
+plus/z : {N:nat} plus z N N.
+plus/s : {N1:nat} {N2:nat} {N3:nat} plus N1 N2 N3 -> plus (s N1) N2 (s N3).
+%worlds () (plus _ _ _).
+%total N (plus N _ _).
+len : bits -> nat -> type.
+%mode +{L:bits} -{N:nat} (len L N).
+len/nil : len nil z.
+len/cons : {L:bits} {N:nat} {X1:bit} len L N -> len (cons X1 L) (s N).
+%worlds () (len _ _).
+%total L (len L _).
+eq-bits : bits -> bits -> type.
+eq-bits/refl : {L:bits} eq-bits L L.
+eq-nat : nat -> nat -> type.
+eq-nat/refl : {N:nat} eq-nat N N.
+[Closing file syntax/syntax.elf]
+[Opening file syntax/dna.elf]
+base : type.
+ba : base.
+bc : base.
+bg : base.
+bt : base.
+bases : type.
+bnil : bases.
+bcons : base -> bases -> bases.
+compat : bit -> base -> type.
+%mode +{B:bit} -{N:base} (compat B N).
+compat/0 : compat b0 ba.
+compat/1 : compat b1 bt.
+%worlds () (compat _ _).
+%total {} (compat _ _).
+enc2 : bit -> bit -> base -> type.
+%mode +{H:bit} +{L:bit} -{N:base} (enc2 H L N).
+enc2/00 : enc2 b0 b0 ba.
+enc2/01 : enc2 b0 b1 bc.
+enc2/10 : enc2 b1 b0 bg.
+enc2/11 : enc2 b1 b1 bt.
+%worlds () (enc2 _ _ _).
+%total {} (enc2 _ _ _).
+dec2 : base -> bit -> bit -> type.
+%mode +{N:base} -{H:bit} -{L:bit} (dec2 N H L).
+dec2/a : dec2 ba b0 b0.
+dec2/c : dec2 bc b0 b1.
+dec2/g : dec2 bg b1 b0.
+dec2/t : dec2 bt b1 b1.
+%worlds () (dec2 _ _ _).
+%total {} (dec2 _ _ _).
+encode : bits -> bases -> type.
+%mode +{L:bits} -{N:bases} (encode L N).
+encode/nil : encode nil bnil.
+encode/cons :
+   {R:bits} {NS:bases} {H:bit} {L:bit} {N:base}
+      encode R NS -> enc2 H L N -> encode (cons H (cons L R)) (bcons N NS).
+%worlds () (encode _ _).
+decode : bases -> bits -> type.
+%mode +{N:bases} -{L:bits} (decode N L).
+decode/nil : decode bnil nil.
+decode/cons :
+   {NS:bases} {R:bits} {N:base} {H:bit} {L:bit}
+      decode NS R -> dec2 N H L -> decode (bcons N NS) (cons H (cons L R)).
+%worlds () (decode _ _).
+%total N (decode N _).
+enc2-dec2 : {H:bit} {L:bit} {N:base} enc2 H L N -> dec2 N H L -> type.
+%mode +{H:bit} +{L:bit} +{N:base} +{E:enc2 H L N} -{D:dec2 N H L} (enc2-dec2 E D).
+- : enc2-dec2 enc2/00 dec2/a.
+- : enc2-dec2 enc2/01 dec2/c.
+- : enc2-dec2 enc2/10 dec2/g.
+- : enc2-dec2 enc2/11 dec2/t.
+%worlds () (enc2-dec2 _ _).
+%total E (enc2-dec2 E _).
+encode-decode : {L:bits} {NS:bases} encode L NS -> decode NS L -> type.
+%mode +{L:bits} +{NS:bases} +{E:encode L NS} -{D:decode NS L} (encode-decode E D).
+- : encode-decode encode/nil decode/nil.
+- :
+   {X1:bits} {X2:bases} {E:encode X1 X2} {D:decode X2 X1} {X3:bit} {X4:bit}
+      {X5:base} {D2:enc2 X3 X4 X5} {D1:dec2 X5 X3 X4}
+      encode-decode E D -> enc2-dec2 D2 D1
+         -> encode-decode (encode/cons E D2) (decode/cons D D1).
+%worlds () (encode-decode _ _).
+%total E (encode-decode E _).
+[Closing file syntax/dna.elf]
+[Opening file fibonacci/fibonacci.elf]
+append : bits -> bits -> bits -> type.
+%mode +{L1:bits} +{L2:bits} -{L3:bits} (append L1 L2 L3).
+append/nil : {L:bits} append nil L L.
+append/cons :
+   {L1:bits} {L2:bits} {L3:bits} {X:bit}
+      append L1 L2 L3 -> append (cons X L1) L2 (cons X L3).
+%worlds () (append _ _ _).
+%total L (append L _ _).
+fibword : nat -> bits -> type.
+%mode +{N:nat} -{W:bits} (fibword N W).
+fibword/0 : fibword z (cons b0 nil).
+fibword/1 : fibword (s z) (cons b0 (cons b1 nil)).
+fibword/ss :
+   {W1:bits} {W0:bits} {W:bits} {N:nat}
+      append W1 W0 W -> fibword N W0 -> fibword (s N) W1 -> fibword (s (s N)) W.
+%worlds () (fibword _ _).
+%total N (fibword N _).
+append-len :
+   {L1:bits} {L2:bits} {L3:bits} {N1:nat} {N2:nat} {N3:nat}
+      append L1 L2 L3 -> len L1 N1 -> len L2 N2 -> len L3 N3 -> plus N1 N2 N3
+         -> type.
+%mode +{L1:bits} +{L2:bits} +{L3:bits} +{N1:nat} +{N2:nat} -{N3:nat}
+   +{A:append L1 L2 L3} +{D1:len L1 N1} +{D2:len L2 N2} -{D3:len L3 N3}
+   -{P:plus N1 N2 N3} (append-len A D1 D2 D3 P).
+- :
+   {X1:bits} {X2:nat} {D2:len X1 X2} append-len append/nil len/nil D2 D2 plus/z.
+- :
+   {X1:bits} {X2:bits} {X3:bits} {X4:nat} {X5:nat} {X6:nat} {A:append X1 X2 X3}
+      {D1:len X1 X4} {D2:len X2 X5} {D3:len X3 X6} {P:plus X4 X5 X6} {X7:bit}
+      append-len A D1 D2 D3 P
+         -> append-len (append/cons A) (len/cons D1) D2 (len/cons D3) (plus/s P).
+%worlds () (append-len _ _ _ _ _).
+%total A (append-len A _ _ _ _).
+len-exists : {N:nat} {L:bits} len L N -> type.
+%mode -{N:nat} +{L:bits} -{D:len L N} (len-exists L D).
+- : len-exists nil len/nil.
+- :
+   {X1:nat} {L:bits} {D:len L X1} {X2:bit}
+      len-exists L D -> len-exists (cons X2 L) (len/cons D).
+%worlds () (len-exists _ _).
+%total L (len-exists L _).
+fib-len :
+   {N:nat} {W:bits} {W1:bits} {W0:bits} {K1:nat} {K0:nat} {K:nat}
+      fibword (s (s N)) W -> fibword (s N) W1 -> fibword N W0 -> len W1 K1
+         -> len W0 K0 -> len W K -> plus K1 K0 K -> type.
+%mode +{N:nat} +{W:bits} -{W1:bits} -{W0:bits} -{K1:nat} -{K0:nat} -{K:nat}
+   +{D:fibword (s (s N)) W} -{D1:fibword (s N) W1} -{D0:fibword N W0}
+   -{L1:len W1 K1} -{L0:len W0 K0} -{L:len W K} -{P:plus K1 K0 K}
+   (fib-len D D1 D0 L1 L0 L P).
+- :
+   {W1:bits} {W0:bits} {X1:bits} {X2:nat} {X3:nat} {X4:nat} {A:append W1 W0 X1}
+      {L1:len W1 X2} {L0:len W0 X3} {L:len X1 X4} {P:plus X2 X3 X4} {X5:nat}
+      {D0:fibword X5 W0} {D1:fibword (s X5) W1}
+      append-len A L1 L0 L P -> len-exists W0 L0 -> len-exists W1 L1
+         -> fib-len (fibword/ss A D0 D1) D1 D0 L1 L0 L P.
+%worlds () (fib-len _ _ _ _ _ _ _).
+%total D (fib-len D _ _ _ _ _ _).
+[Closing file fibonacci/fibonacci.elf]
+[Opening file braid/braid.elf]
+xor : bit -> bit -> bit -> type.
+%mode +{X:bit} +{Y:bit} -{Z:bit} (xor X Y Z).
+xor/00 : xor b0 b0 b0.
+xor/01 : xor b0 b1 b1.
+xor/10 : xor b1 b0 b1.
+xor/11 : xor b1 b1 b0.
+%worlds () (xor _ _ _).
+%total {} (xor _ _ _).
+xorv : bits -> bits -> bits -> type.
+%mode +{X:bits} +{Y:bits} -{Z:bits} (xorv X Y Z).
+xorv/nil : xorv nil nil nil.
+xorv/cons :
+   {L:bits} {M:bits} {N:bits} {X:bit} {Y:bit} {Z:bit}
+      xorv L M N -> xor X Y Z -> xorv (cons X L) (cons Y M) (cons Z N).
+%worlds () (xorv _ _ _).
+braid : bits -> bits -> bits -> bits -> type.
+%mode +{X:bits} +{Y:bits} -{A:bits} -{B:bits} (braid X Y A B).
+braid/rule : {X:bits} {Y:bits} {Z:bits} xorv X Y Z -> braid X Y Y Z.
+%worlds () (braid _ _ _ _).
+unbraid : bits -> bits -> bits -> bits -> type.
+%mode +{A:bits} +{B:bits} -{X:bits} -{Y:bits} (unbraid A B X Y).
+unbraid/rule : {A:bits} {B:bits} {Z:bits} xorv A B Z -> unbraid A B Z A.
+%worlds () (unbraid _ _ _ _).
+xor-shift : {X:bit} {Y:bit} {Z:bit} xor X Y Z -> xor Y Z X -> type.
+%mode +{X:bit} +{Y:bit} +{Z:bit} +{D:xor X Y Z} -{E:xor Y Z X} (xor-shift D E).
+- : xor-shift xor/00 xor/00.
+- : xor-shift xor/01 xor/11.
+- : xor-shift xor/10 xor/01.
+- : xor-shift xor/11 xor/10.
+%worlds () (xor-shift _ _).
+%total D (xor-shift D _).
+xorv-shift : {X:bits} {Y:bits} {Z:bits} xorv X Y Z -> xorv Y Z X -> type.
+%mode +{X:bits} +{Y:bits} +{Z:bits} +{D:xorv X Y Z} -{E:xorv Y Z X} (xorv-shift D E).
+- : xorv-shift xorv/nil xorv/nil.
+- :
+   {X1:bits} {X2:bits} {X3:bits} {V:xorv X1 X2 X3} {V':xorv X2 X3 X1} {X4:bit}
+      {X5:bit} {X6:bit} {D:xor X4 X5 X6} {D':xor X5 X6 X4}
+      xorv-shift V V' -> xor-shift D D'
+         -> xorv-shift (xorv/cons V D) (xorv/cons V' D').
+%worlds () (xorv-shift _ _).
+%total D (xorv-shift D _).
+braid-inverse :
+   {X:bits} {Y:bits} {A:bits} {B:bits} braid X Y A B -> unbraid A B X Y -> type.
+%mode +{X:bits} +{Y:bits} +{A:bits} +{B:bits} +{D:braid X Y A B} -{E:unbraid A B X Y}
+   (braid-inverse D E).
+- :
+   {X1:bits} {X2:bits} {X3:bits} {V:xorv X1 X2 X3} {V':xorv X2 X3 X1}
+      xorv-shift V V' -> braid-inverse (braid/rule V) (unbraid/rule V').
+%worlds () (braid-inverse _ _).
+%total D (braid-inverse D _).
+xor-swap : {X:bit} {Y:bit} {Z:bit} xor X Y Z -> xor Y X Z -> type.
+%mode +{X:bit} +{Y:bit} +{Z:bit} +{D:xor X Y Z} -{E:xor Y X Z} (xor-swap D E).
+- : xor-swap xor/00 xor/00.
+- : xor-swap xor/01 xor/10.
+- : xor-swap xor/10 xor/01.
+- : xor-swap xor/11 xor/11.
+%worlds () (xor-swap _ _).
+%total D (xor-swap D _).
+xor-back : {X:bit} {Y:bit} {Z:bit} xor X Y Z -> xor Z X Y -> type.
+%mode +{X:bit} +{Y:bit} +{Z:bit} +{D:xor X Y Z} -{E:xor Z X Y} (xor-back D E).
+- : xor-back xor/00 xor/00.
+- : xor-back xor/01 xor/10.
+- : xor-back xor/10 xor/11.
+- : xor-back xor/11 xor/01.
+%worlds () (xor-back _ _).
+%total D (xor-back D _).
+xorv-back : {X:bits} {Y:bits} {Z:bits} xorv X Y Z -> xorv Z X Y -> type.
+%mode +{X:bits} +{Y:bits} +{Z:bits} +{D:xorv X Y Z} -{E:xorv Z X Y} (xorv-back D E).
+- : xorv-back xorv/nil xorv/nil.
+- :
+   {X1:bits} {X2:bits} {X3:bits} {V:xorv X1 X2 X3} {V':xorv X3 X1 X2} {X4:bit}
+      {X5:bit} {X6:bit} {D:xor X4 X5 X6} {D':xor X6 X4 X5}
+      xorv-back V V' -> xor-back D D'
+         -> xorv-back (xorv/cons V D) (xorv/cons V' D').
+%worlds () (xorv-back _ _).
+%total D (xorv-back D _).
+unbraid-inverse :
+   {A:bits} {B:bits} {X:bits} {Y:bits} unbraid A B X Y -> braid X Y A B -> type.
+%mode +{A:bits} +{B:bits} +{X:bits} +{Y:bits} +{D:unbraid A B X Y} -{E:braid X Y A B}
+   (unbraid-inverse D E).
+- :
+   {X1:bits} {X2:bits} {X3:bits} {V:xorv X1 X2 X3} {V':xorv X3 X1 X2}
+      xorv-back V V' -> unbraid-inverse (unbraid/rule V) (braid/rule V').
+%worlds () (unbraid-inverse _ _).
+%total D (unbraid-inverse D _).
+[Closing file braid/braid.elf]
+[Opening file transitions/turing.elf]
+tsym : type.
+t0 : tsym.
+t1 : tsym.
+tb : tsym.
+tlist : type.
+tnil : tlist.
+tcons : tsym -> tlist -> tlist.
+tape : type.
+tp : tlist -> tsym -> tlist -> tape.
+move : type.
+mL : move.
+mR : move.
+mS : move.
+state : type.
+scan : state.
+carry : state.
+halt : state.
+conf : type.
+cfg : state -> tape -> conf.
+delta : state -> tsym -> tsym -> move -> state -> type.
+%mode +{Q:state} +{S:tsym} -{W:tsym} -{M:move} -{Q':state} (delta Q S W M Q').
+delta/scan0 : delta scan t0 t0 mR scan.
+delta/scan1 : delta scan t1 t1 mR scan.
+delta/scanb : delta scan tb tb mL carry.
+delta/carry1 : delta carry t1 t0 mL carry.
+delta/carry0 : delta carry t0 t1 mS halt.
+delta/carryb : delta carry tb t1 mS halt.
+%worlds () (delta _ _ _ _ _).
+shift : move -> tape -> tape -> type.
+%mode +{M:move} +{T:tape} -{T':tape} (shift M T T').
+shift/S : {T:tape} shift mS T T.
+shift/L-end :
+   {C:tsym} {R:tlist} shift mL (tp tnil C R) (tp tnil tb (tcons C R)).
+shift/L :
+   {X:tsym} {L:tlist} {C:tsym} {R:tlist}
+      shift mL (tp (tcons X L) C R) (tp L X (tcons C R)).
+shift/R-end :
+   {L:tlist} {C:tsym} shift mR (tp L C tnil) (tp (tcons C L) tb tnil).
+shift/R :
+   {L:tlist} {C:tsym} {X:tsym} {R:tlist}
+      shift mR (tp L C (tcons X R)) (tp (tcons C L) X R).
+%worlds () (shift _ _ _).
+%total {} (shift _ _ _).
+step : conf -> conf -> type.
+%mode +{C:conf} -{C':conf} (step C C').
+step/rule :
+   {M:move} {L:tlist} {W:tsym} {R:tlist} {T':tape} {Q:state} {C:tsym} {Q':state}
+      shift M (tp L W R) T' -> delta Q C W M Q'
+         -> step (cfg Q (tp L C R)) (cfg Q' T').
+%worlds () (step _ _).
+reach : conf -> nat -> conf -> type.
+%mode +{C:conf} +{N:nat} -{C':conf} (reach C N C').
+reach/z : {C:conf} reach C z C.
+reach/s :
+   {C':conf} {N:nat} {C'':conf} {C:conf}
+      reach C' N C'' -> step C C' -> reach C (s N) C''.
+%worlds () (reach _ _ _).
+final : conf -> type.
+final/halt : {X1:tape} final (cfg halt X1).
+run : nat -> conf -> conf -> nat -> type.
+%mode +{F:nat} +{C:conf} -{C':conf} -{N:nat} (run F C C' N).
+run/halt : {F:nat} {T:tape} run F (cfg halt T) (cfg halt T) z.
+run/step :
+   {F:nat} {C':conf} {C'':conf} {N:nat} {C:conf}
+      run F C' C'' N -> step C C' -> run (s F) C C'' (s N).
+%worlds () (run _ _ _ _).
+outcome : type.
+has-rule : outcome.
+is-halt : outcome.
+no-rule : outcome.
+classify : state -> tsym -> outcome -> type.
+%mode +{Q:state} +{S:tsym} -{O:outcome} (classify Q S O).
+classify/s0 : classify scan t0 has-rule.
+classify/s1 : classify scan t1 has-rule.
+classify/sb : classify scan tb has-rule.
+classify/c0 : classify carry t0 has-rule.
+classify/c1 : classify carry t1 has-rule.
+classify/cb : classify carry tb has-rule.
+classify/h : {X1:tsym} classify halt X1 is-halt.
+%worlds () (classify _ _ _).
+%total {} (classify _ _ _).
+invalid : conf -> type.
+invalid/norule :
+   {Q:state} {S:tsym} {X1:tlist} {X2:tlist}
+      classify Q S no-rule -> invalid (cfg Q (tp X1 S X2)).
+has-delta :
+   {Q:state} {S:tsym} {W:tsym} {M:move} {Q':state}
+      classify Q S has-rule -> delta Q S W M Q' -> type.
+%mode +{Q:state} +{S:tsym} -{W:tsym} -{M:move} -{Q':state} +{C:classify Q S has-rule}
+   -{D:delta Q S W M Q'} (has-delta C D).
+- : has-delta classify/s0 delta/scan0.
+- : has-delta classify/s1 delta/scan1.
+- : has-delta classify/sb delta/scanb.
+- : has-delta classify/c0 delta/carry0.
+- : has-delta classify/c1 delta/carry1.
+- : has-delta classify/cb delta/carryb.
+%worlds () (has-delta _ _).
+%total C (has-delta C _).
+eq-tsym : tsym -> tsym -> type.
+eq-tsym/refl : {S:tsym} eq-tsym S S.
+eq-move : move -> move -> type.
+eq-move/refl : {M:move} eq-move M M.
+eq-state : state -> state -> type.
+eq-state/refl : {Q:state} eq-state Q Q.
+eq-tape : tape -> tape -> type.
+eq-tape/refl : {T:tape} eq-tape T T.
+eq-conf : conf -> conf -> type.
+eq-conf/refl : {C:conf} eq-conf C C.
+delta-unique :
+   {Q:state} {S:tsym} {W:tsym} {M:move} {Q1:state} {W2:tsym} {M2:move}
+      {Q2:state}
+      delta Q S W M Q1 -> delta Q S W2 M2 Q2 -> eq-tsym W W2 -> eq-move M M2
+         -> eq-state Q1 Q2 -> type.
+%mode +{Q:state} +{S:tsym} +{W:tsym} +{M:move} +{Q1:state} +{W2:tsym} +{M2:move}
+   +{Q2:state} +{D1:delta Q S W M Q1} +{D2:delta Q S W2 M2 Q2}
+   -{E1:eq-tsym W W2} -{E2:eq-move M M2} -{E3:eq-state Q1 Q2}
+   (delta-unique D1 D2 E1 E2 E3).
+- :
+   {X1:state} {X2:tsym} {X3:tsym} {X4:move} {X5:state} {D:delta X1 X2 X3 X4 X5}
+      delta-unique D D eq-tsym/refl eq-move/refl eq-state/refl.
+%worlds () (delta-unique _ _ _ _ _).
+%total {} (delta-unique _ _ _ _ _).
+shift-unique :
+   {M:move} {T:tape} {T1:tape} {T2:tape}
+      shift M T T1 -> shift M T T2 -> eq-tape T1 T2 -> type.
+%mode +{M:move} +{T:tape} +{T1:tape} +{T2:tape} +{D1:shift M T T1} +{D2:shift M T T2}
+   -{E:eq-tape T1 T2} (shift-unique D1 D2 E).
+- :
+   {X1:move} {X2:tape} {X3:tape} {D:shift X1 X2 X3}
+      shift-unique D D eq-tape/refl.
+%worlds () (shift-unique _ _ _).
+%total {} (shift-unique _ _ _).
+cfg-cong :
+   {T1:tape} {T2:tape} {Q:state}
+      eq-tape T1 T2 -> eq-conf (cfg Q T1) (cfg Q T2) -> type.
+%mode +{T1:tape} +{T2:tape} +{Q:state} +{E:eq-tape T1 T2}
+   -{E2:eq-conf (cfg Q T1) (cfg Q T2)} (cfg-cong Q E E2).
+- : {X1:tape} {X2:state} cfg-cong X2 eq-tape/refl eq-conf/refl.
+%worlds () (cfg-cong _ _ _).
+%total {} (cfg-cong _ _ _).
+step-det-aux :
+   {W:tsym} {W2:tsym} {M:move} {M2:move} {Q1:state} {Q2:state} {L:tlist}
+      {R:tlist} {T1:tape} {T2:tape}
+      eq-tsym W W2 -> eq-move M M2 -> eq-state Q1 Q2 -> shift M (tp L W R) T1
+         -> shift M2 (tp L W2 R) T2 -> eq-conf (cfg Q1 T1) (cfg Q2 T2) -> type.
+%mode +{W:tsym} +{W2:tsym} +{M:move} +{M2:move} +{Q1:state} +{Q2:state} +{L:tlist}
+   +{R:tlist} +{T1:tape} +{T2:tape} +{E1:eq-tsym W W2} +{E2:eq-move M M2}
+   +{E3:eq-state Q1 Q2} +{S1:shift M (tp L W R) T1}
+   +{S2:shift M2 (tp L W2 R) T2} -{E:eq-conf (cfg Q1 T1) (cfg Q2 T2)}
+   (step-det-aux E1 E2 E3 S1 S2 E).
+- :
+   {X1:tape} {X2:tape} {Q1:state} {ET:eq-tape X1 X2}
+      {E:eq-conf (cfg Q1 X1) (cfg Q1 X2)} {X3:move} {X4:tlist} {X5:tsym}
+      {X6:tlist} {S1:shift X3 (tp X4 X5 X6) X1} {S2:shift X3 (tp X4 X5 X6) X2}
+      cfg-cong Q1 ET E -> shift-unique S1 S2 ET
+         -> step-det-aux eq-tsym/refl eq-move/refl eq-state/refl S1 S2 E.
+%worlds () (step-det-aux _ _ _ _ _ _).
+%total {} (step-det-aux _ _ _ _ _ _).
+step-det :
+   {C:conf} {C1:conf} {C2:conf} step C C1 -> step C C2 -> eq-conf C1 C2 -> type.
+%mode +{C:conf} +{C1:conf} +{C2:conf} +{D1:step C C1} +{D2:step C C2}
+   -{E:eq-conf C1 C2} (step-det D1 D2 E).
+- :
+   {X1:tsym} {X2:tsym} {X3:move} {X4:move} {X5:state} {X6:state} {X7:tlist}
+      {X8:tlist} {X9:tape} {X10:tape} {EW:eq-tsym X1 X2} {EM:eq-move X3 X4}
+      {EQ:eq-state X5 X6} {S1:shift X3 (tp X7 X1 X8) X9}
+      {S2:shift X4 (tp X7 X2 X8) X10} {E:eq-conf (cfg X5 X9) (cfg X6 X10)}
+      {X11:state} {X12:tsym} {D1:delta X11 X12 X1 X3 X5}
+      {D2:delta X11 X12 X2 X4 X6}
+      step-det-aux EW EM EQ S1 S2 E -> delta-unique D1 D2 EW EM EQ
+         -> step-det (step/rule S1 D1) (step/rule S2 D2) E.
+%worlds () (step-det _ _ _).
+%total {} (step-det _ _ _).
+run-reach :
+   {F:nat} {C:conf} {C2:conf} {N:nat} run F C C2 N -> reach C N C2 -> type.
+%mode +{F:nat} +{C:conf} +{C2:conf} +{N:nat} +{R:run F C C2 N} -{D:reach C N C2}
+   (run-reach R D).
+- : {X1:nat} {X2:tape} run-reach run/halt reach/z.
+- :
+   {X1:nat} {X2:conf} {X3:conf} {X4:nat} {R:run X1 X2 X3 X4} {D:reach X2 X4 X3}
+      {X5:conf} {S:step X5 X2}
+      run-reach R D -> run-reach (run/step R S) (reach/s D S).
+%worlds () (run-reach _ _).
+%total R (run-reach R _).
+[Closing file transitions/turing.elf]
+%% OK %%
+[Opening file /workspace/morphic-helix/tests/properties/elf-negative/encode-total.elf]
+[Closing file /workspace/morphic-helix/tests/properties/elf-negative/encode-total.elf]
+/workspace/morphic-helix/tests/properties/elf-negative/encode-total.elf:5.8-5.9 Error: 
+Coverage error --- missing cases:
+{X1:bases} |- encode (cons b0 nil) X1,
+{X1:bases} |- encode (cons b1 nil) X1.
+
+%% ABORT %%
+# exit 1
+# required failure text: Coverage error --- missing cases:

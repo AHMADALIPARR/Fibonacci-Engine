@@ -1,0 +1,23 @@
+$ node source/original-archive/pristine/fibonacci_braid/fibonacci_braid.js
+# started 2026-11-10T18:51:10+0000
+{
+  "fibonacciLength": 21,
+  "dna": "ATAATATAATAATATAATATA",
+  "braidReversible": true,
+  "codeLength": 84,
+  "doublyEven": true,
+  "codeXorClosed": true,
+  "turingMachine": {
+    "status": "HALT",
+    "steps": 8,
+    "output": "1100"
+  },
+  "modeledCapacity": {
+    "hypotheticalTargetTFLOPS": 100,
+    "seconds": 1,
+    "operations": 100000000000000,
+    "hypotheticalSteps": 100000000000,
+    "note": "A budget projection only. Turing-machine steps and bitwise XOR are NOT floating-point operations."
+  }
+}
+# exit 0

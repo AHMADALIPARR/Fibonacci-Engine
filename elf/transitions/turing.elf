@@ -1,0 +1,164 @@
+% SPDX-License-Identifier: AGPL-3.0-only
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3. See the LICENSE file.
+% Turing-machine configuration relations, transition reachability, halting, invalid states.
+% Tape: zipper (reversed left part, current cell, right part); cells beyond the ends are blank.
+% The machine is the binary-increment machine of the original JS (incrementRules).
+
+tsym : type.
+t0 : tsym.
+t1 : tsym.
+tb : tsym.            % blank '_'
+
+tlist : type.
+tnil : tlist.
+tcons : tsym -> tlist -> tlist.
+
+tape : type.
+tp : tlist -> tsym -> tlist -> tape.
+
+move : type.
+mL : move.
+mR : move.
+mS : move.
+
+state : type.
+scan : state.
+carry : state.
+halt : state.
+
+conf : type.
+cfg : state -> tape -> conf.
+
+% Functional transition table: one clause per (state, symbol) pair at most.
+delta : state -> tsym -> tsym -> move -> state -> type.
+%mode delta +Q +S -W -M -Q'.
+delta/scan0 : delta scan t0 t0 mR scan.
+delta/scan1 : delta scan t1 t1 mR scan.
+delta/scanb : delta scan tb tb mL carry.
+delta/carry1 : delta carry t1 t0 mL carry.
+delta/carry0 : delta carry t0 t1 mS halt.
+delta/carryb : delta carry tb t1 mS halt.
+%worlds () (delta _ _ _ _ _).
+
+shift : move -> tape -> tape -> type.
+%mode shift +M +T -T'.
+shift/S : shift mS T T.
+shift/L-end : shift mL (tp tnil C R) (tp tnil tb (tcons C R)).
+shift/L : shift mL (tp (tcons X L) C R) (tp L X (tcons C R)).
+shift/R-end : shift mR (tp L C tnil) (tp (tcons C L) tb tnil).
+shift/R : shift mR (tp L C (tcons X R)) (tp (tcons C L) X R).
+%worlds () (shift _ _ _).
+%total {} (shift _ _ _).
+
+step : conf -> conf -> type.
+%mode step +C -C'.
+step/rule : step (cfg Q (tp L C R)) (cfg Q' T') <- delta Q C W M Q' <- shift M (tp L W R) T'.
+%worlds () (step _ _).
+
+% Transition reachability in exactly N steps.
+reach : conf -> nat -> conf -> type.
+%mode reach +C +N -C'.
+reach/z : reach C z C.
+reach/s : reach C (s N) C'' <- step C C' <- reach C' N C''.
+%worlds () (reach _ _ _).
+
+final : conf -> type.
+final/halt : final (cfg halt _).
+
+% Halting run with fuel F: runs until the halt state, returns the step count.
+% No solution within the fuel bound corresponds to the JS status STEP_LIMIT (or NO_RULE).
+run : nat -> conf -> conf -> nat -> type.
+%mode run +F +C -C' -N.
+run/halt : run F (cfg halt T) (cfg halt T) z.
+run/step : run (s F) C C'' (s N) <- step C C' <- run F C' C'' N.
+%worlds () (run _ _ _ _).
+
+% Invalid-state detection: classification of every (state, symbol) pair, total by coverage checking.
+outcome : type.
+has-rule : outcome.
+is-halt : outcome.
+no-rule : outcome.
+classify : state -> tsym -> outcome -> type.
+%mode classify +Q +S -O.
+classify/s0 : classify scan t0 has-rule.
+classify/s1 : classify scan t1 has-rule.
+classify/sb : classify scan tb has-rule.
+classify/c0 : classify carry t0 has-rule.
+classify/c1 : classify carry t1 has-rule.
+classify/cb : classify carry tb has-rule.
+classify/h : classify halt _ is-halt.
+%worlds () (classify _ _ _).
+%total {} (classify _ _ _).
+
+invalid : conf -> type.
+invalid/norule : invalid (cfg Q (tp _ S _)) <- classify Q S no-rule.
+
+% Every non-halting classification has a transition (soundness of classify against delta).
+has-delta : classify Q S has-rule -> delta Q S W M Q' -> type.
+%mode has-delta +C -D.
+- : has-delta classify/s0 delta/scan0.
+- : has-delta classify/s1 delta/scan1.
+- : has-delta classify/sb delta/scanb.
+- : has-delta classify/c0 delta/carry0.
+- : has-delta classify/c1 delta/carry1.
+- : has-delta classify/cb delta/carryb.
+%worlds () (has-delta _ _).
+%total C (has-delta C _).
+
+% Determinism of the transition table and of single steps (Invariant E in Elf).
+eq-tsym : tsym -> tsym -> type.
+eq-tsym/refl : eq-tsym S S.
+eq-move : move -> move -> type.
+eq-move/refl : eq-move M M.
+eq-state : state -> state -> type.
+eq-state/refl : eq-state Q Q.
+eq-tape : tape -> tape -> type.
+eq-tape/refl : eq-tape T T.
+eq-conf : conf -> conf -> type.
+eq-conf/refl : eq-conf C C.
+
+delta-unique : delta Q S W M Q1 -> delta Q S W2 M2 Q2
+               -> eq-tsym W W2 -> eq-move M M2 -> eq-state Q1 Q2 -> type.
+%mode delta-unique +D1 +D2 -E1 -E2 -E3.
+- : delta-unique D D eq-tsym/refl eq-move/refl eq-state/refl.
+%worlds () (delta-unique _ _ _ _ _).
+%total {} (delta-unique _ _ _ _ _).
+
+shift-unique : shift M T T1 -> shift M T T2 -> eq-tape T1 T2 -> type.
+%mode shift-unique +D1 +D2 -E.
+- : shift-unique D D eq-tape/refl.
+%worlds () (shift-unique _ _ _).
+%total {} (shift-unique _ _ _).
+
+cfg-cong : {Q:state} eq-tape T1 T2 -> eq-conf (cfg Q T1) (cfg Q T2) -> type.
+%mode cfg-cong +Q +E -E2.
+- : cfg-cong _ eq-tape/refl eq-conf/refl.
+%worlds () (cfg-cong _ _ _).
+%total {} (cfg-cong _ _ _).
+
+step-det-aux : eq-tsym W W2 -> eq-move M M2 -> eq-state Q1 Q2
+               -> shift M (tp L W R) T1 -> shift M2 (tp L W2 R) T2
+               -> eq-conf (cfg Q1 T1) (cfg Q2 T2) -> type.
+%mode step-det-aux +E1 +E2 +E3 +S1 +S2 -E.
+- : step-det-aux eq-tsym/refl eq-move/refl eq-state/refl S1 S2 E
+     <- shift-unique S1 S2 ET
+     <- cfg-cong Q1 ET E.
+%worlds () (step-det-aux _ _ _ _ _ _).
+%total {} (step-det-aux _ _ _ _ _ _).
+
+step-det : step C C1 -> step C C2 -> eq-conf C1 C2 -> type.
+%mode step-det +D1 +D2 -E.
+- : step-det (step/rule S1 D1) (step/rule S2 D2) E
+     <- delta-unique D1 D2 EW EM EQ
+     <- step-det-aux EW EM EQ S1 S2 E.
+%worlds () (step-det _ _ _).
+%total {} (step-det _ _ _).
+
+% Trace consistency (Invariant F in Elf): a run derivation is a chain of legal step derivations
+% from the given initial configuration; reach witnesses it with the same step count.
+run-reach : run F C C2 N -> reach C N C2 -> type.
+%mode run-reach +R -D.
+- : run-reach run/halt reach/z.
+- : run-reach (run/step R S) (reach/s D S) <- run-reach R D.
+%worlds () (run-reach _ _).
+%total R (run-reach R _).

@@ -1,0 +1,15 @@
+$ rm -rf agda/_build && cd agda && agda Everything.agda
+# started 2026-11-10T18:51:16+0000
+Checking Everything (/workspace/morphic-helix/agda/Everything.agda).
+ Checking Prelude (/workspace/morphic-helix/agda/Prelude.agda).
+ Checking Fibonacci.Words (/workspace/morphic-helix/agda/Fibonacci/Words.agda).
+ Checking Braid.XorBraid (/workspace/morphic-helix/agda/Braid/XorBraid.agda).
+ Checking Braid.AlloyReversible (/workspace/morphic-helix/agda/Braid/AlloyReversible.agda).
+ Checking DNA.Encoding (/workspace/morphic-helix/agda/DNA/Encoding.agda).
+ Checking Coding.Repetition (/workspace/morphic-helix/agda/Coding/Repetition.agda).
+ Checking Turing.Machine (/workspace/morphic-helix/agda/Turing/Machine.agda).
+ Checking Turing.Trace (/workspace/morphic-helix/agda/Turing/Trace.agda).
+ Checking Turing.Increment (/workspace/morphic-helix/agda/Turing/Increment.agda).
+ Checking Spiral.Index (/workspace/morphic-helix/agda/Spiral/Index.agda).
+ Checking Spiral.Vectors (/workspace/morphic-helix/agda/Spiral/Vectors.agda).
+# exit 0

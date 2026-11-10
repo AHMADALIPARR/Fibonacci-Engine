@@ -1,0 +1,12 @@
+$ ruby tests/integration/test_integration.rb
+# started 2026-11-10T18:51:22+0000
+Run options: --seed 11177
+
+# Running:
+
+.........
+
+Finished in 2.656606s, 3.3878 runs/s, 60.9801 assertions/s.
+
+9 runs, 162 assertions, 0 failures, 0 errors, 0 skips
+# exit 0

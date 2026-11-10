@@ -1,0 +1,8 @@
+$ rm -rf tests/properties/agda-negative/_build && cd tests/properties/agda-negative && agda WrongStepCount.agda
+# started 2026-11-10T18:51:18+0000
+Checking WrongStepCount (/workspace/morphic-helix/tests/properties/agda-negative/WrongStepCount.agda).
+/workspace/morphic-helix/tests/properties/agda-negative/WrongStepCount.agda:12,9-13
+9 != 11 of type Nat
+when checking that the expression refl has type length trace ≡ 11
+# exit 42
+# required failure text: 9 != 11 of type Nat

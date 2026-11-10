@@ -1,0 +1,22 @@
+$ ruby scripts/alloy-check.rb
+# started 2026-11-10T18:51:18+0000
+braid_extended.als: alloy exit 0
+  OK   LeftInverse                          NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check LeftInverse for exactly 8 Pos
+  OK   RightInverse                         NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check RightInverse for exactly 8 Pos
+  OK   InvolutionClaim                      COUNTEREXAMPLE     expected COUNTEREXAMPLE     check InvolutionClaim for exactly 1 Pos
+  OK   OrderThree                           NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check OrderThree for exactly 4 Pos, 1..12 steps
+  OK   OrderNotOne                          COUNTEREXAMPLE     expected COUNTEREXAMPLE     check OrderNotOne for exactly 1 Pos, 1..4 steps
+braid_invariant.als: alloy exit 0
+  OK   Reversible                           NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check Reversible for exactly 8 Pos
+  OK   run$2                                INSTANCE           expected INSTANCE           run {} for exactly 8 Pos
+dna_encoding.als: alloy exit 0
+  OK   DecodeEncode                         NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check DecodeEncode
+  OK   EncodeDecode                         NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check EncodeDecode
+  OK   Injective                            NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check Injective
+  OK   CompatInjective                      NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check CompatInjective
+  OK   CompatOnto                           COUNTEREXAMPLE     expected COUNTEREXAMPLE     check CompatOnto
+turing_determinism.als: alloy exit 0
+  OK   Deterministic                        NO_COUNTEREXAMPLE  expected NO_COUNTEREXAMPLE  check Deterministic for 4
+  OK   DeterministicWithoutFunctionality    COUNTEREXAMPLE     expected COUNTEREXAMPLE     check DeterministicWithoutFunctionality for 4
+all Alloy commands met their expectations (bounded scopes only)
+# exit 0

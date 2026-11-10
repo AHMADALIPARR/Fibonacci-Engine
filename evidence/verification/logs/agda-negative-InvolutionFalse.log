@@ -1,0 +1,9 @@
+$ rm -rf tests/properties/agda-negative/_build && cd tests/properties/agda-negative && agda InvolutionFalse.agda
+# started 2026-11-10T18:51:18+0000
+Checking InvolutionFalse (/workspace/morphic-helix/tests/properties/agda-negative/InvolutionFalse.agda).
+/workspace/morphic-helix/tests/properties/agda-negative/InvolutionFalse.agda:11,18-22
+xorV x y != x of type Vec Bool 1
+when checking that the expression refl has type
+braid (braid (x , y)) ≡ (x , y)
+# exit 42
+# required failure text: xorV x y != x of type Vec Bool 1

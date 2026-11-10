@@ -1,0 +1,43 @@
+wrote evidence/benchmarks/results.json (41 entries)
+braid.scalar_each                                  0.024738 s
+braid.array_primitive                           3.05452e-06 s
+braid.validated_Braid                            4.2183e-05 s
+braid.roundtrip_Unbraid∘Braid                   4.78193e-05 s
+batch.one_call_256x4096                         3.12658e-06 s
+batch.per_row_calls_256x4096                     6.1001e-05 s
+alloc.fib_word_24_by_append                     3.81015e-06 s
+alloc.fresh_copy_1M_bits                        4.80786e-06 s
+reversible.ms_run_6ops_8x131072                 2.81866e-05 s
+reversible.ms_roundtrip_8x131072                4.88261e-05 s
+flop.f64_multiply_add_1M                         0.00156647 s
+int.i16_add_1M                                  0.000189639 s
+mem.f64_reverse_copy_16M                          0.0159565 s
+code.rep4_encode_262144                         1.25172e-05 s
+code.rep4_decode_262144                         6.24223e-05 s
+arrays.entropy_1M_symbols                        0.00102525 s
+spiral.position_vectorised_1M                     0.0464574 s
+js.braid_1M                                       0.0146636 s
+js.roundtrip_1M                                   0.0156469 s
+js.rep4_encode_262144                             0.0168351 s
+js.fibonacci_words_24                            0.00565856 s
+js.runTM_1011                                   1.27771e-06 s
+ruby.braid_1M                                      0.220563 s
+ruby.roundtrip_1M                                  0.282359 s
+ruby.rep4_encode_262144                           0.0658801 s
+ruby.fibonacci_words_24                          0.00076138 s
+ruby.ms_run_6ops_8x131072                           0.55474 s
+ruby.runTM_1011                                 1.34125e-05 s
+ruby.spiral_position_65536                        0.0186222 s
+speedup.cbqn_array_vs_scalar_each                   8098.81 x
+speedup.cbqn_batched_vs_per_row                     19.5105 x
+cost.cbqn_validation_overhead                         13.81 x
+speedup.cbqn_vs_original_js_braid                   347.618 x
+speedup.cbqn_vs_ruby_braid                          5228.73 x
+speedup.cbqn_vs_ruby_multistrand                      19681 x
+throughput.cbqn_measured_flop_per_s             1.33877e+09 FLOP/s
+throughput.cbqn_int_add_per_s                   5.52932e+09 int-add/s
+bandwidth.cbqn_reverse_copy                          16.823 GB/s
+simulation.js_tm_steps_per_s                    6.26118e+06 TM steps/s
+simulation.ruby_tm_steps_per_s                       596459 TM steps/s
+throughput.cbqn_xor_bit_ops_per_s               3.43287e+11 bit-XOR/s
+BENCH_EXIT=0
